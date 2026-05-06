@@ -15,14 +15,7 @@ from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
-
-# Support both firecrawl-py v1 (FirecrawlApp / scrape_url) and v2 (Firecrawl / scrape)
-try:
-    from firecrawl import Firecrawl as FirecrawlApp   # v2+
-    _SCRAPE_METHOD = "scrape"
-except ImportError:
-    from firecrawl import FirecrawlApp                 # v1
-    _SCRAPE_METHOD = "scrape_url"
+from firecrawl import FirecrawlApp
 
 # ── CONFIG ─────────────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).parent
@@ -113,17 +106,24 @@ def scrape_all():
     for site in sites:
         print(f"  Scraping {site['name']}...")
         try:
-            scrape_fn = getattr(app, _SCRAPE_METHOD)
-            kwargs = dict(
-                formats=["extract"],
-                extract={
-                    "prompt": EXTRACT_PROMPT,
-                    "schema": EXTRACT_SCHEMA,
-                },
-            )
-            if _SCRAPE_METHOD == "scrape_url":
-                kwargs["wait_for"] = 5000
-            result = scrape_fn(site["url"], **kwargs)
+            extract_params = {
+                "prompt": EXTRACT_PROMPT,
+                "schema": EXTRACT_SCHEMA,
+            }
+            # firecrawl-py v2 uses app.scrape(); v1 uses app.scrape_url()
+            if hasattr(app, "scrape_url"):
+                result = app.scrape_url(
+                    site["url"],
+                    formats=["extract"],
+                    extract=extract_params,
+                    wait_for=5000,
+                )
+            else:
+                result = app.scrape(
+                    site["url"],
+                    formats=["extract"],
+                    extract=extract_params,
+                )
 
             raw_units = []
             if hasattr(result, "extract") and result.extract:
