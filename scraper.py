@@ -110,14 +110,22 @@ def scrape_all():
                 "prompt": EXTRACT_PROMPT,
                 "schema": EXTRACT_SCHEMA,
             }
-            # firecrawl-py v2 uses app.scrape(); v1 uses app.scrape_url()
+            # Call scrape — handle v1 old-style (params dict),
+            # v1 new-style (keyword args), and v2 (app.scrape)
             if hasattr(app, "scrape_url"):
-                result = app.scrape_url(
-                    site["url"],
-                    formats=["extract"],
-                    extract=extract_params,
-                    wait_for=5000,
-                )
+                try:
+                    # v1 newer: keyword args
+                    result = app.scrape_url(
+                        site["url"],
+                        formats=["extract"],
+                        extract=extract_params,
+                    )
+                except TypeError:
+                    # v1 older: params dict
+                    result = app.scrape_url(
+                        site["url"],
+                        params={"formats": ["extract"], "extract": extract_params},
+                    )
             else:
                 result = app.scrape(
                     site["url"],
@@ -125,9 +133,16 @@ def scrape_all():
                     extract=extract_params,
                 )
 
+            # Result may be an object (newer) or a plain dict (older v1)
             raw_units = []
-            if hasattr(result, "extract") and result.extract:
+            if isinstance(result, dict):
+                data = result.get("extract") or result.get("llm_extraction")
+            elif hasattr(result, "extract"):
                 data = result.extract
+            else:
+                data = None
+
+            if data:
                 if isinstance(data, dict) and "units" in data:
                     raw_units = data["units"]
                 elif isinstance(data, list):
