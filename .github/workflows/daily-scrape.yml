@@ -39,7 +39,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
           git add data/history.json
-          git diff --staged --quiet && echo "No changes to commit" || (
-            git commit -m "chore: daily comp scrape $(date -u +%Y-%m-%d)" &&
-            git push
-          )
+          git diff --staged --quiet && echo "No changes to commit" || {
+            git commit -m "chore: daily comp scrape $(date -u +%Y-%m-%d)"
+            git push || (git pull --rebase origin main && git push)
+          }
