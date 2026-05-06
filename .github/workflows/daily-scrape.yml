@@ -37,13 +37,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
           git add data/history.json
           git diff --staged --quiet && echo "No changes to commit" || {
             git commit -m "chore: daily comp scrape $(date -u +%Y-%m-%d)"
             for attempt in 1 2 3 4 5; do
-              git push && break
-              echo "Push attempt $attempt failed — rebasing and retrying..."
-              git pull --rebase origin main
+              git pull --rebase origin main && git push && break
+              echo "Push attempt $attempt failed — retrying..."
             done
           }
