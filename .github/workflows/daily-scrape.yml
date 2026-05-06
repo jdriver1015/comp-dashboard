@@ -1,0 +1,38 @@
+name: Daily Comp Scrape
+
+on:
+  schedule:
+    - cron: '0 18 * * *'   # 12:00 PM CST (UTC-6) / 1:00 PM CDT (UTC-5)
+  workflow_dispatch:         # Allow manual runs from the GitHub Actions tab
+
+permissions:
+  contents: write            # Needed to commit history.json back to the repo
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        env:
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+        run: python scraper.py
+
+      - name: Commit updated history.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/history.json
+          git diff --staged --quiet && echo "No changes to commit" || \
+            git commit -m "chore: daily comp scrape $(date -u +%Y-%m-%d)" && git push

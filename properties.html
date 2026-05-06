@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CR Capital · Property Portfolio</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #1e293b; line-height: 1.5; min-height: 100vh; }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1a3254 100%);
+      color: #fff; padding: 24px 48px;
+      border-bottom: 3px solid #2563eb;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-logo {
+      width: 38px; height: 38px; background: #2563eb; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1rem; color: #fff; letter-spacing: -.03em;
+    }
+    .brand-text h1 { font-size: 1.1rem; font-weight: 800; letter-spacing: -.02em; }
+    .brand-text p  { font-size: .72rem; color: #94a3b8; margin-top: 1px; }
+    .btn-add-prop {
+      background: #2563eb; color: #fff; border: none; border-radius: 8px;
+      padding: 10px 20px; font-size: .82rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 7px; transition: background .15s;
+    }
+    .btn-add-prop:hover { background: #1d4ed8; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1300px; margin: 0 auto; padding: 36px 48px 64px; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex; gap: 32px; margin-bottom: 32px;
+      padding-bottom: 24px; border-bottom: 2px solid #e2e8f0;
+      flex-wrap: wrap; align-items: center;
+    }
+    .stat-pill { display: flex; flex-direction: column; }
+    .stat-pill .val { font-size: 1.4rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
+    .stat-pill .lbl { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; font-weight: 700; }
+    .stats-bar .divider { width: 1px; height: 36px; background: #e2e8f0; }
+    .section-title { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #64748b; margin-bottom: 20px; }
+
+    /* ── PROPERTY GRID ── */
+    .prop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+
+    /* ── PROPERTY CARD ── */
+    .prop-card {
+      background: #fff; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer;
+      transition: box-shadow .15s, transform .15s; display: flex; flex-direction: column;
+    }
+    .prop-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); transform: translateY(-2px); }
+    .card-accent { height: 5px; }
+    .card-body { padding: 22px 24px 18px; flex: 1; display: flex; flex-direction: column; }
+    .card-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: .62rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em;
+      padding: 3px 9px; border-radius: 20px; margin-bottom: 10px; width: fit-content;
+    }
+    .badge-subject { background: #eff6ff; color: #2563eb; }
+    .card-name { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; line-height: 1.3; }
+    .card-addr { font-size: .75rem; color: #64748b; margin-bottom: 16px; }
+    .card-meta { display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+    .card-meta-item { display: flex; flex-direction: column; }
+    .card-meta-item .mv { font-size: .88rem; font-weight: 700; color: #0f172a; }
+    .card-meta-item .ml { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; font-weight: 600; }
+    .card-divider { height: 1px; background: #f1f5f9; margin-bottom: 16px; }
+    .card-stats { display: flex; gap: 24px; margin-bottom: 18px; }
+    .card-stat { display: flex; flex-direction: column; }
+    .card-stat .sv { font-size: .95rem; font-weight: 800; color: #0f172a; }
+    .card-stat .sl { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; font-weight: 600; }
+    .occ-hi  { color: #059669 !important; }
+    .occ-mid { color: #d97706 !important; }
+    .occ-lo  { color: #dc2626 !important; }
+    .card-comps { font-size: .73rem; color: #64748b; margin-bottom: 18px; }
+    .comp-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px; margin-bottom: 1px; vertical-align: middle; }
+    .card-footer { margin-top: auto; }
+    .btn-view {
+      width: 100%; padding: 10px; background: #f8fafc; border: 1.5px solid #e2e8f0;
+      border-radius: 7px; font-size: .8rem; font-weight: 700; color: #2563eb;
+      cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-view:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+    /* ── ADD CARD ── */
+    .add-card {
+      background: #fff; border-radius: 12px; border: 2px dashed #cbd5e1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 48px 24px; cursor: pointer; transition: all .15s; min-height: 280px;
+    }
+    .add-card:hover { border-color: #2563eb; background: #eff6ff; }
+    .add-icon {
+      width: 52px; height: 52px; background: #f1f5f9; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; color: #94a3b8; margin-bottom: 14px; transition: all .15s;
+    }
+    .add-card:hover .add-icon { background: #dbeafe; color: #2563eb; }
+    .add-card h3 { font-size: .9rem; font-weight: 700; color: #475569; margin-bottom: 6px; }
+    .add-card p  { font-size: .75rem; color: #94a3b8; text-align: center; max-width: 200px; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(15,23,42,.55); backdrop-filter: blur(4px);
+      z-index: 1000; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 14px; width: 100%; max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25); overflow: hidden;
+      animation: slideUp .2s ease;
+    }
+    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .modal-header {
+      padding: 22px 28px 18px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .modal-header h2 { font-size: .95rem; font-weight: 800; color: #0f172a; }
+    .modal-header p  { font-size: .73rem; color: #94a3b8; margin-top: 2px; }
+    .modal-close { background: none; border: none; font-size: 1.2rem; color: #94a3b8; cursor: pointer; padding: 2px; line-height: 1; }
+    .modal-close:hover { color: #0f172a; }
+    .modal-body { padding: 24px 28px; }
+    .modal-footer { padding: 16px 28px 22px; display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #f1f5f9; }
+
+    /* ── PROGRESS STEPS ── */
+    .steps { display: flex; align-items: center; gap: 0; margin-bottom: 24px; }
+    .step { display: flex; align-items: center; gap: 8px; }
+    .step-num {
+      width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 800; flex-shrink: 0;
+    }
+    .step-num.done  { background: #2563eb; color: #fff; }
+    .step-num.active { background: #2563eb; color: #fff; box-shadow: 0 0 0 3px #bfdbfe; }
+    .step-num.todo  { background: #f1f5f9; color: #94a3b8; }
+    .step-label { font-size: .72rem; font-weight: 700; color: #64748b; white-space: nowrap; }
+    .step-label.active { color: #2563eb; }
+    .step-line { flex: 1; height: 2px; background: #e2e8f0; margin: 0 8px; min-width: 24px; }
+    .step-line.done { background: #2563eb; }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { display: block; font-size: .72rem; font-weight: 700; color: #374151; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .04em; }
+    input, select {
+      width: 100%; padding: 9px 12px; border: 1.5px solid #e2e8f0; border-radius: 7px;
+      font-size: .83rem; color: #1e293b; outline: none; transition: border-color .15s;
+      font-family: inherit;
+    }
+    input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px #bfdbfe40; }
+    input.error { border-color: #ef4444; }
+    .field-hint { font-size: .69rem; color: #94a3b8; margin-top: 4px; }
+    .field-error { font-size: .69rem; color: #ef4444; margin-top: 4px; display: none; }
+    input.error + .field-error { display: block; }
+
+    /* ── REVIEW PANEL ── */
+    .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .review-item { background: #f8fafc; border-radius: 8px; padding: 12px 14px; }
+    .review-item.full { grid-column: 1 / -1; }
+    .review-item .rl { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; font-weight: 700; margin-bottom: 3px; }
+    .review-item .rv { font-size: .83rem; font-weight: 700; color: #0f172a; word-break: break-all; }
+    .review-note { background: #eff6ff; border-radius: 8px; padding: 12px 14px; margin-top: 16px; font-size: .75rem; color: #1d4ed8; line-height: 1.5; }
+
+    /* ── BUTTONS ── */
+    .btn { padding: 9px 20px; border-radius: 7px; font-size: .82rem; font-weight: 700; cursor: pointer; border: none; transition: all .15s; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+    .btn-ghost { background: #f1f5f9; color: #475569; }
+    .btn-ghost:hover { background: #e2e8f0; }
+
+    /* ── EMPTY STATE ── */
+    .empty { text-align: center; padding: 64px 32px; color: #94a3b8; }
+    .empty h3 { font-size: .9rem; font-weight: 700; color: #475569; margin-bottom: 8px; }
+
+    .loading { font-size: .75rem; color: #94a3b8; font-style: italic; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #0f172a; color: #fff; padding: 13px 22px; border-radius: 10px;
+      font-size: .82rem; font-weight: 500; max-width: 520px; text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25); opacity: 0; pointer-events: none;
+      transition: opacity .25s, transform .25s; z-index: 2000; line-height: 1.5;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">CR</div>
+    <div class="brand-text">
+      <h1>CR Capital</h1>
+      <p>Property Analytics</p>
+    </div>
+  </div>
+  <button class="btn-add-prop" onclick="openAddModal()">
+    <span style="font-size:1.1rem;line-height:1">+</span> Add Property
+  </button>
+</header>
+
+<div class="container">
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-pill"><span class="val" id="sBars">—</span><span class="lbl">Properties</span></div>
+    <div class="divider"></div>
+    <div class="stat-pill"><span class="val" id="sComps">—</span><span class="lbl">Comps Tracked</span></div>
+    <div class="divider"></div>
+    <div class="stat-pill"><span class="val" id="sUnits">—</span><span class="lbl">Total Units Managed</span></div>
+    <div class="divider"></div>
+    <div class="stat-pill"><span class="val" id="sDate">—</span><span class="lbl">Last Data Refresh</span></div>
+  </div>
+
+  <div class="section-title">Your Properties</div>
+  <div class="prop-grid" id="propGrid"></div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ── ADD PROPERTY MODAL ── -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalTitle">Add Property</h2>
+        <p id="modalSubtitle">Step 1 of 3 — Basic information</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Steps -->
+      <div class="steps" id="modalSteps">
+        <div class="step">
+          <div class="step-num active" id="sn1">1</div>
+          <div class="step-label active" id="sl1">Info</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step">
+          <div class="step-num todo" id="sn2">2</div>
+          <div class="step-label" id="sl2">Website</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step">
+          <div class="step-num todo" id="sn3">3</div>
+          <div class="step-label" id="sl3">Confirm</div>
+        </div>
+      </div>
+
+      <!-- Step 1: Basic Info -->
+      <div id="step1">
+        <div class="form-group">
+          <label>Property Name *</label>
+          <input type="text" id="fName" placeholder="e.g. Lexington at Champions">
+          <div class="field-error">Required</div>
+        </div>
+        <div class="form-group">
+          <label>Street Address *</label>
+          <input type="text" id="fStreet" placeholder="e.g. 5007 FM 1960 W">
+          <div class="field-error">Required</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label>City, State *</label>
+            <input type="text" id="fCity" placeholder="Houston, TX">
+            <div class="field-error">Required</div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>ZIP Code</label>
+            <input type="text" id="fZip" placeholder="77069">
+          </div>
+        </div>
+        <div style="height:14px"></div>
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label>Year Built</label>
+            <input type="number" id="fYear" placeholder="2003" min="1900" max="2030">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Total Units</label>
+            <input type="number" id="fUnits" placeholder="89" min="1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Website -->
+      <div id="step2" style="display:none">
+        <div class="form-group">
+          <label>Floor Plans Page URL *</label>
+          <input type="url" id="fUrl" placeholder="https://www.yourproperty.com/floor-plans">
+          <div class="field-error">Enter a valid URL</div>
+          <div class="field-hint">The scraper will visit this URL daily to collect pricing & availability data.</div>
+        </div>
+        <div class="form-group">
+          <label>Short Nickname</label>
+          <input type="text" id="fShort" placeholder="e.g. Lexington" maxlength="20">
+          <div class="field-hint">Used in chart legends. Auto-filled if left blank.</div>
+        </div>
+      </div>
+
+      <!-- Step 3: Review -->
+      <div id="step3" style="display:none">
+        <div class="review-grid" id="reviewGrid"></div>
+        <div class="review-note">
+          🕗 The daily scraper will collect rental data for this property starting tonight at 8 AM CST. Comp data can be added after the property is saved.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="btnBack" style="display:none" onclick="prevStep()">← Back</button>
+      <button class="btn btn-primary" id="btnNext" onclick="nextStep()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTS ────────────────────────────────────────────────────────────────
+const LS_KEY = 'cr_cap_props';
+const PALETTE = ['#2563eb','#f59e0b','#10b981','#8b5cf6','#ef4444','#06b6d4','#84cc16','#f43f5e'];
+
+const DEFAULT_PROPERTIES = [
+  {
+    id: 'lexington',
+    name: 'Lexington at Champions',
+    shortName: 'Lexington',
+    address: '5007 FM 1960 W, Houston, TX 77069',
+    yearBuilt: 2003,
+    totalUnits: 89,
+    website: 'https://www.thelexingtonatchampions.com/floor-plans',
+    lat: 29.983967, lng: -95.505280,
+    color: '#2563eb',
+    comps: [
+      { id:'marquis',    name:'Marquis Champions Forest', shortName:'Marquis',    address:'5959 FM 1960 W, Houston, TX 77069',         yearBuilt:1995, totalUnits:404, website:'https://www.marquischampionsforest.com/floor-plans',  lat:29.977854, lng:-95.516432, color:'#f59e0b', availUnknown:false },
+      { id:'greenwood',  name:'Greenwood Forest',         shortName:'Greenwood',  address:'12820 Greenwood Forest Dr, Houston, TX 77066', yearBuilt:1994, totalUnits:316, website:'https://www.livegreenwoodforest.com/models',           lat:29.982149, lng:-95.506107, color:'#10b981', availUnknown:false },
+      { id:'northchase', name:'Northchase Village',       shortName:'Northchase', address:'4522 Sylvanfield Dr, Houston, TX 77014',       yearBuilt:2007, totalUnits:232, website:'https://www.northchasevillage.com/floorplans/',       lat:29.990100, lng:-95.515000, color:'#8b5cf6', availUnknown:true  }
+    ]
+  }
+];
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+function getProperties() {
+  try {
+    const s = localStorage.getItem(LS_KEY);
+    return s ? JSON.parse(s) : null;
+  } catch { return null; }
+}
+
+function saveProperties(props) {
+  localStorage.setItem(LS_KEY, JSON.stringify(props));
+}
+
+function downloadPropertiesJson(props) {
+  const blob = new Blob([JSON.stringify(props, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'properties.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showToast(msg, durationMs = 8000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), durationMs);
+}
+
+async function initStorage() {
+  if (!getProperties()) {
+    try {
+      const res = await fetch('./data/properties.json?_=' + Date.now());
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length) { saveProperties(data); return; }
+      }
+    } catch {}
+    saveProperties(DEFAULT_PROPERTIES);
+  }
+}
+
+// ── HISTORY DATA ─────────────────────────────────────────────────────────────
+let historyData = [];
+
+async function loadHistory() {
+  try {
+    const res = await fetch('./data/history.json?_=' + Date.now());
+    historyData = await res.json();
+  } catch { historyData = []; }
+}
+
+function getLatestStats(propId) {
+  if (!historyData.length) return null;
+  const latest = historyData[historyData.length - 1];
+  const units = latest.units.filter(u => u.prop === propId && u.rent && u.sqft);
+  if (!units.length) return null;
+  const rents = units.map(u => u.rent);
+  return {
+    minRent: Math.min(...rents),
+    maxRent: Math.max(...rents),
+    date: latest.date
+  };
+}
+
+function getOccStats(propId, totalUnits, availUnknown) {
+  if (availUnknown) return null;
+  if (!historyData.length) return null;
+  const latest = historyData[historyData.length - 1];
+  const avail = latest.units.filter(u => u.prop === propId).reduce((s,u) => s + (u.count != null ? u.count : 1), 0);
+  if (!totalUnits) return null;
+  return Math.round((totalUnits - avail) / totalUnits * 100);
+}
+
+// ── HAVERSINE ─────────────────────────────────────────────────────────────────
+function milesApart(lat1,lng1,lat2,lng2) {
+  const R=3958.8, toR=Math.PI/180;
+  const dLat=(lat2-lat1)*toR, dLng=(lng2-lng1)*toR;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*toR)*Math.cos(lat2*toR)*Math.sin(dLng/2)**2;
+  return (2*R*Math.asin(Math.sqrt(a))).toFixed(1);
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function renderAll() {
+  const props = getProperties() || DEFAULT_PROPERTIES;
+  renderStats(props);
+  renderGrid(props);
+}
+
+function renderStats(props) {
+  const totalComps = props.reduce((s,p) => s + (p.comps||[]).length, 0);
+  const totalUnits = props.reduce((s,p) => s + (p.totalUnits||0), 0);
+  const lastDate = historyData.length ? historyData[historyData.length-1].date : null;
+  document.getElementById('sBars').textContent  = props.length;
+  document.getElementById('sComps').textContent = totalComps;
+  document.getElementById('sUnits').textContent = totalUnits.toLocaleString();
+  document.getElementById('sDate').textContent  = lastDate ? new Date(lastDate + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+}
+
+function renderGrid(props) {
+  const grid = document.getElementById('propGrid');
+  const cards = props.map(p => buildCard(p)).join('');
+  grid.innerHTML = cards + buildAddCard();
+}
+
+function buildCard(p) {
+  const stats = getLatestStats(p.id);
+  const occ   = getOccStats(p.id, p.totalUnits, p.availUnknown);
+  const rentStr = stats ? `$${stats.minRent.toLocaleString()}–$${stats.maxRent.toLocaleString()}` : '<span style="color:#94a3b8;font-weight:400">No data yet</span>';
+  const occStr  = occ === null
+    ? '<span style="color:#94a3b8">N/A</span>'
+    : `<span class="${occ>=93?'occ-hi':occ>=88?'occ-mid':'occ-lo'}">${occ}%</span>`;
+
+  const comps = p.comps || [];
+  const compDots = comps.map(c => `<span class="comp-dot" style="background:${c.color}"></span>${c.shortName||c.name.split(' ')[0]}`).join(' · ') || '<span style="color:#94a3b8">No comps yet</span>';
+
+  return `
+  <div class="prop-card" onclick="openDashboard('${p.id}')">
+    <div class="card-accent" style="background:${p.color}"></div>
+    <div class="card-body">
+      <div class="card-badge badge-subject">★ Subject Property</div>
+      <div class="card-name">${p.name}</div>
+      <div class="card-addr">${p.address}</div>
+      <div class="card-meta">
+        <div class="card-meta-item"><span class="mv">${p.yearBuilt||'—'}</span><span class="ml">Built</span></div>
+        <div class="card-meta-item"><span class="mv">${(p.totalUnits||0).toLocaleString()}</span><span class="ml">Units</span></div>
+        <div class="card-meta-item"><span class="mv">${comps.length}</span><span class="ml">Comps</span></div>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-stats">
+        <div class="card-stat"><span class="sv">${rentStr}</span><span class="sl">Rent Range</span></div>
+        <div class="card-stat"><span class="sv">${occStr}</span><span class="sl">Implied Occ%</span></div>
+      </div>
+      <div class="card-comps">${compDots}</div>
+      <div class="card-footer">
+        <button class="btn-view" onclick="event.stopPropagation();openDashboard('${p.id}')">
+          View Dashboard <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildAddCard() {
+  return `
+  <div class="add-card" onclick="openAddModal()">
+    <div class="add-icon">+</div>
+    <h3>Add Property</h3>
+    <p>Add a subject property and configure its comp set</p>
+  </div>`;
+}
+
+function openDashboard(id) {
+  location.href = 'index.html?id=' + encodeURIComponent(id);
+}
+
+// ── ADD PROPERTY MODAL ────────────────────────────────────────────────────────
+let currentStep = 1;
+
+function openAddModal() {
+  currentStep = 1;
+  clearForm();
+  updateStepUI();
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('addModal').classList.remove('open');
+}
+
+function clearForm() {
+  ['fName','fStreet','fCity','fZip','fYear','fUnits','fUrl','fShort'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.classList.remove('error'); }
+  });
+}
+
+function updateStepUI() {
+  // Show/hide panels
+  document.getElementById('step1').style.display = currentStep === 1 ? '' : 'none';
+  document.getElementById('step2').style.display = currentStep === 2 ? '' : 'none';
+  document.getElementById('step3').style.display = currentStep === 3 ? '' : 'none';
+
+  // Progress indicators
+  for (let i = 1; i <= 3; i++) {
+    const num = document.getElementById('sn'+i);
+    const lbl = document.getElementById('sl'+i);
+    if (i < currentStep) {
+      num.className = 'step-num done'; num.textContent = '✓';
+    } else if (i === currentStep) {
+      num.className = 'step-num active'; num.textContent = i;
+      lbl.className = 'step-label active';
+    } else {
+      num.className = 'step-num todo'; num.textContent = i;
+      lbl.className = 'step-label';
+    }
+  }
+  for (let i = 1; i <= 2; i++) {
+    document.getElementById('line'+i).className = 'step-line' + (i < currentStep ? ' done' : '');
+  }
+
+  const subtitles = ['Step 1 of 3 — Basic information', 'Step 2 of 3 — Data source', 'Step 3 of 3 — Review & confirm'];
+  document.getElementById('modalSubtitle').textContent = subtitles[currentStep - 1];
+  document.getElementById('btnBack').style.display = currentStep > 1 ? '' : 'none';
+  document.getElementById('btnNext').textContent = currentStep === 3 ? 'Add Property' : 'Next →';
+}
+
+function validateStep(step) {
+  let valid = true;
+  if (step === 1) {
+    [['fName','Required'],['fStreet','Required'],['fCity','Required']].forEach(([id]) => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+      else el.classList.remove('error');
+    });
+  }
+  if (step === 2) {
+    const el = document.getElementById('fUrl');
+    const val = el.value.trim();
+    if (!val || !/^https?:\/\/.+/.test(val)) { el.classList.add('error'); valid = false; }
+    else el.classList.remove('error');
+  }
+  return valid;
+}
+
+function nextStep() {
+  if (currentStep < 3) {
+    if (!validateStep(currentStep)) return;
+    if (currentStep === 2) buildReview();
+    currentStep++;
+    updateStepUI();
+  } else {
+    saveNewProperty();
+  }
+}
+
+function prevStep() {
+  if (currentStep > 1) { currentStep--; updateStepUI(); }
+}
+
+function buildReview() {
+  const name   = document.getElementById('fName').value.trim();
+  const street = document.getElementById('fStreet').value.trim();
+  const city   = document.getElementById('fCity').value.trim();
+  const zip    = document.getElementById('fZip').value.trim();
+  const year   = document.getElementById('fYear').value;
+  const units  = document.getElementById('fUnits').value;
+  const url    = document.getElementById('fUrl').value.trim();
+  const short  = document.getElementById('fShort').value.trim() || name.split(' ')[0];
+
+  document.getElementById('reviewGrid').innerHTML = `
+    <div class="review-item full"><div class="rl">Property Name</div><div class="rv">${name}</div></div>
+    <div class="review-item full"><div class="rl">Address</div><div class="rv">${street}, ${city}${zip?' '+zip:''}</div></div>
+    <div class="review-item"><div class="rl">Year Built</div><div class="rv">${year||'—'}</div></div>
+    <div class="review-item"><div class="rl">Total Units</div><div class="rv">${units||'—'}</div></div>
+    <div class="review-item"><div class="rl">Nickname</div><div class="rv">${short}</div></div>
+    <div class="review-item full"><div class="rl">Floor Plans URL</div><div class="rv">${url}</div></div>
+  `;
+}
+
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+}
+
+async function geocode(street, cityState, zip) {
+  try {
+    const q = encodeURIComponent(`${street} ${cityState} ${zip}`);
+    const res = await fetch(`https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=${q}&benchmark=Public_AR_Current&format=json`);
+    const data = await res.json();
+    const match = data?.result?.addressMatches?.[0]?.coordinates;
+    return match ? { lat: match.y, lng: match.x } : null;
+  } catch { return null; }
+}
+
+async function saveNewProperty() {
+  const btn = document.getElementById('btnNext');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  const name   = document.getElementById('fName').value.trim();
+  const street = document.getElementById('fStreet').value.trim();
+  const city   = document.getElementById('fCity').value.trim();
+  const zip    = document.getElementById('fZip').value.trim();
+  const year   = parseInt(document.getElementById('fYear').value) || null;
+  const units  = parseInt(document.getElementById('fUnits').value) || null;
+  const url    = document.getElementById('fUrl').value.trim();
+  const short  = document.getElementById('fShort').value.trim() || name.split(' ')[0];
+  const address = `${street}, ${city}${zip ? ' ' + zip : ''}`;
+
+  // Geocode
+  const coords = await geocode(street, city, zip);
+
+  const props = getProperties() || [];
+  const existingIds = props.map(p => p.id);
+  let id = slugify(name);
+  let i = 2;
+  while (existingIds.includes(id)) { id = slugify(name) + '_' + i; i++; }
+
+  const usedColors = props.map(p => p.color);
+  const color = PALETTE.find(c => !usedColors.includes(c)) || PALETTE[props.length % PALETTE.length];
+
+  props.push({
+    id, name, shortName: short, address,
+    yearBuilt: year, totalUnits: units,
+    website: url, color,
+    lat: coords?.lat || null,
+    lng: coords?.lng || null,
+    comps: []
+  });
+  saveProperties(props);
+  downloadPropertiesJson(props);
+
+  closeModal();
+  await loadHistory();
+  renderAll();
+  btn.disabled = false;
+  showToast('✓ Property saved! A properties.json file was downloaded — save it to comp-dashboard/data/ so the scraper picks up the new property on its next run.');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('addModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('addModal')) closeModal();
+});
+
+(async () => {
+  await initStorage();
+  await loadHistory();
+  renderAll();
+})();
+</script>
+</body>
+</html>
