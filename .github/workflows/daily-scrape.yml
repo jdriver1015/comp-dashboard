@@ -41,5 +41,9 @@ jobs:
           git add data/history.json
           git diff --staged --quiet && echo "No changes to commit" || {
             git commit -m "chore: daily comp scrape $(date -u +%Y-%m-%d)"
-            git push || (git pull --rebase origin main && git push)
+            for attempt in 1 2 3 4 5; do
+              git push && break
+              echo "Push attempt $attempt failed — rebasing and retrying..."
+              git pull --rebase origin main
+            done
           }
