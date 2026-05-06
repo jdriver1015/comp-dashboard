@@ -11,9 +11,11 @@
     "lng": -95.50528,
     "color": "#2563eb",
     "comps": [
-      { "id": "marquis",    "name": "Marquis Champions Forest", "shortName": "Marquis",    "address": "5959 FM 1960 W, Houston, TX 77069",           "yearBuilt": 1995, "totalUnits": 404, "website": "https://www.marquischampionsforest.com/floor-plans",  "lat": 29.977854, "lng": -95.516432, "color": "#f59e0b", "availUnknown": false },
-      { "id": "greenwood",  "name": "Greenwood Forest",         "shortName": "Greenwood",  "address": "12820 Greenwood Forest Dr, Houston, TX 77066", "yearBuilt": 1994, "totalUnits": 316, "website": "https://www.livegreenwoodforest.com/models",           "lat": 29.982149, "lng": -95.506107, "color": "#10b981", "availUnknown": false },
-      { "id": "northchase", "name": "Northchase Village",       "shortName": "Northchase", "address": "4522 Sylvanfield Dr, Houston, TX 77014",         "yearBuilt": 2007, "totalUnits": 232, "website": "https://www.northchasevillage.com/floorplans/",       "lat": 29.9901,   "lng": -95.515,   "color": "#8b5cf6", "availUnknown": true  }
+      { "id": "marquis",        "name": "Marquis Champions Forest",    "shortName": "Marquis",        "address": "5959 FM 1960 W, Houston, TX 77069",              "yearBuilt": 1995, "totalUnits": 404, "website": "https://www.marquischampionsforest.com/floor-plans",      "lat": 29.977854, "lng": -95.516432, "color": "#f59e0b", "availUnknown": false },
+      { "id": "greenwood",      "name": "Greenwood Forest",            "shortName": "Greenwood",      "address": "12820 Greenwood Forest Dr, Houston, TX 77066",   "yearBuilt": 1994, "totalUnits": 316, "website": "https://www.livegreenwoodforest.com/models",             "lat": 29.982149, "lng": -95.506107, "color": "#10b981", "availUnknown": false },
+      { "id": "northchase",     "name": "Northchase Village",          "shortName": "Northchase",     "address": "4522 Sylvanfield Dr, Houston, TX 77014",          "yearBuilt": 2007, "totalUnits": 232, "website": "https://www.northchasevillage.com/floorplans/",          "lat": 29.990100, "lng": -95.515000, "color": "#8b5cf6", "availUnknown": true  },
+      { "id": "stablechase",    "name": "Club at Stablechase",         "shortName": "Stablechase",    "address": "13504 Schroeder Rd, Houston, TX 77070",           "yearBuilt": 1999, "totalUnits": 148, "website": "https://www.clubatstablechaseliving.com/floorplans/",    "lat": 29.970200, "lng": -95.530500, "color": "#ef4444", "availUnknown": false },
+      { "id": "cypress_creek",  "name": "Villages of Cypress Creek",   "shortName": "Cypress Creek",  "address": "10300 Cypresswood Dr, Houston, TX 77070",         "yearBuilt": 2001, "totalUnits": 384, "website": "https://villagesofcypresscreek.com/floorplans/",         "lat": 29.991000, "lng": -95.521000, "color": "#06b6d4", "availUnknown": false }
     ]
   }
 ]
