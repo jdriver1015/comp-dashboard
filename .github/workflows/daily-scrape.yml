@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write            # Needed to commit history.json back to the repo
 
+concurrency:
+  group: scrape
+  cancel-in-progress: true   # If a new run starts, cancel any in-progress run
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
