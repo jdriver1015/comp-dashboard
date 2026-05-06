@@ -415,7 +415,7 @@
         "sqft": 835,
         "rent": 930,
         "avail": "May 6",
-        "count": 1
+        "count": 5
       },
       {
         "prop": "greenwood",
@@ -425,7 +425,7 @@
         "sqft": 979,
         "rent": 1060,
         "avail": "May 7",
-        "count": 1
+        "count": 3
       },
       {
         "prop": "greenwood",
@@ -445,7 +445,7 @@
         "sqft": 1176,
         "rent": 1160,
         "avail": "May 7",
-        "count": 1
+        "count": 4
       },
       {
         "prop": "greenwood",
@@ -478,6 +478,16 @@
         "count": 1
       },
       {
+        "prop": "greenwood",
+        "plan": "B",
+        "br": 0,
+        "ba": 1,
+        "sqft": 684,
+        "rent": null,
+        "avail": "Unavailable",
+        "count": 1
+      },
+      {
         "prop": "northchase",
         "plan": "A1",
         "br": 1,
@@ -504,7 +514,7 @@
         "ba": 1,
         "sqft": 944,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Unavailable",
         "count": 1
       },
       {
@@ -514,7 +524,7 @@
         "ba": 1,
         "sqft": 1000,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Unavailable",
         "count": 1
       },
       {
@@ -524,7 +534,7 @@
         "ba": 1,
         "sqft": 1098,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Unavailable",
         "count": 1
       },
       {
@@ -534,7 +544,7 @@
         "ba": 2,
         "sqft": 1090,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Unavailable",
         "count": 1
       },
       {
@@ -564,7 +574,7 @@
         "ba": 2,
         "sqft": 1388,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Unavailable",
         "count": 1
       },
       {
@@ -573,9 +583,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 806,
-        "rent": null,
-        "avail": "Available: 06/09/26",
-        "count": 1
+        "rent": 1399,
+        "avail": "Available Now",
+        "count": 2
       },
       {
         "prop": "stablechase",
@@ -594,8 +604,8 @@
         "ba": 1,
         "sqft": 729,
         "rent": 1239,
-        "avail": "Available: 07/08/26",
-        "count": 1
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "stablechase",
@@ -604,7 +614,7 @@
         "ba": 1,
         "sqft": 819,
         "rent": 1269,
-        "avail": "Available: 06/05/26",
+        "avail": "Call for details.",
         "count": 1
       },
       {
@@ -614,8 +624,8 @@
         "ba": 1,
         "sqft": 912,
         "rent": 1299,
-        "avail": "Available now!",
-        "count": 1
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "stablechase",
@@ -624,7 +634,7 @@
         "ba": 2,
         "sqft": 1118,
         "rent": 1489,
-        "avail": "Available: 07/08/26",
+        "avail": "Call for details.",
         "count": 1
       },
       {
@@ -634,7 +644,7 @@
         "ba": 2,
         "sqft": 1149,
         "rent": 1469,
-        "avail": "Available: 06/12/26",
+        "avail": "Call for details.",
         "count": 1
       },
       {
@@ -644,8 +654,8 @@
         "ba": 2,
         "sqft": 1299,
         "rent": 1849,
-        "avail": "Available now!",
-        "count": 1
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "stablechase",
