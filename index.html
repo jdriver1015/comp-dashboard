@@ -74,6 +74,11 @@
     .occ-hi  { font-weight:800; font-size:.9rem; color:#059669; }
     .occ-mid { font-weight:700; font-size:.85rem; color:#d97706; }
     .occ-lo  { font-weight:700; font-size:.85rem; color:#dc2626; }
+    .conf-badge { display:inline-flex; align-items:center; gap:4px; font-size:.72rem; font-weight:700; padding:2px 7px; border-radius:99px; }
+    .conf-hi  { background:#dcfce7; color:#15803d; }
+    .conf-mid { background:#fef9c3; color:#92400e; }
+    .conf-lo  { background:#fee2e2; color:#b91c1c; }
+    .conf-tip { font-size:.65rem; font-weight:400; color:#94a3b8; display:block; margin-top:2px; }
 
     /* ── CHART CARDS ── */
     .charts-2col { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
@@ -261,6 +266,7 @@
           <th rowspan="2" class="center">Distance</th>
           <th rowspan="2" class="center">Avail. Units</th>
           <th rowspan="2" class="center">Implied Occ%</th>
+          <th rowspan="2" class="center">Data Quality</th>
           <th colspan="2" class="col-group-hdr">Avg 1 Bedroom</th>
           <th colspan="2" class="col-group-hdr">Avg 2 Bedroom</th>
         </tr>
@@ -522,8 +528,9 @@ function initConfig() {
   if (fpSub) fpSub.textContent = `${PROPS[subjectId].name} rows highlighted in blue. Filter by bedroom count.`;
 }
 
-let latestUnits = [];
-let history     = [];
+let latestUnits      = [];
+let latestConfidence = {};
+let history          = [];
 let hiddenProps = new Set();
 let hiddenBrs   = new Set();
 let dollarChart = null;
@@ -560,8 +567,9 @@ async function loadData() {
     history = await res.json();
   } catch { history = SEED_DATA; }
 
-  const latest = history[history.length-1];
-  latestUnits  = latest.units;
+  const latest     = history[history.length-1];
+  latestUnits      = latest.units;
+  latestConfidence = latest.confidence || {};
 
   const d = new Date(latest.date+'T12:00:00');
   document.getElementById('headerSubtitle').textContent =
@@ -628,6 +636,17 @@ function buildSummaryTable() {
       : `<span class="${v>=93?'occ-hi':v>=88?'occ-mid':'occ-lo'}">${v}%</span>`;
     const availCell = avail === null ? '<span class="placeholder">N/A</span>' : `<span class="num-sm">${avail}</span>`;
 
+    const conf = latestConfidence[key];
+    const confLabel = conf == null ? '<span class="placeholder">—</span>'
+      : conf >= 80 ? `<span class="conf-badge conf-hi">${conf}%</span>`
+      : conf >= 55 ? `<span class="conf-badge conf-mid">${conf}%</span>`
+      :              `<span class="conf-badge conf-lo">${conf}%</span>`;
+    const confTip = conf == null ? ''
+      : conf >= 80 ? '<span class="conf-tip">Per-unit dates</span>'
+      : conf >= 55 ? '<span class="conf-tip">Aggregate counts</span>'
+      : conf >= 25 ? '<span class="conf-tip">No avail. shown</span>'
+      :              '<span class="conf-tip">Scrape failed</span>';
+
     return `<tr class="${p.subject?'subject-row':''}">
       <td><div class="prop-badge"><div class="prop-bar" style="background:${p.color}"></div><span class="prop-nm">${p.subject?'★ ':''}${p.name}</span></div></td>
       <td class="center-td">${m.units}</td>
@@ -635,6 +654,7 @@ function buildSummaryTable() {
       <td class="center-td">${dist}</td>
       <td class="center-td">${availCell}</td>
       <td class="center-td">${fmtOcc(impliedOcc)}</td>
+      <td class="center-td">${confLabel}${confTip}</td>
       <td class="center-td">${fmt$(avg1)}</td>
       <td class="center-td">${fmtP(psf1)}</td>
       <td class="center-td">${fmt$(avg2)}</td>
