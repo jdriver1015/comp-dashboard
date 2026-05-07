@@ -12,7 +12,7 @@ import json
 import os
 import re
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -52,21 +52,22 @@ def load_sites():
 
 
 def build_extract_prompt():
-    today = date.today()
-    cutoff = today + timedelta(days=2)
     return (
-        f"Today's date is {today.strftime('%B %d, %Y')}. "
-        "Extract all apartment unit listings with their floorplan name/type, "
-        "number of bedrooms, number of bathrooms, square footage, monthly rent "
-        "(use null if it says 'call for pricing' or no price is shown), "
-        "and availability status. "
-        "For the 'count' field: count only units that are VACANT RIGHT NOW. "
-        "A unit is currently vacant if its availability text says 'Available Now', "
-        f"'Available Immediately', or a specific date on or before {cutoff.strftime('%B %d, %Y')}. "
-        "Any unit with a move-in date further in the future is pre-leasing only — "
-        "set count=0 for those. Do NOT count future move-in dates as currently available. "
-        f"Example: if today is {today.strftime('%B %d')} and a unit says 'Available {(today + timedelta(days=10)).strftime('%B %d')}', count=0. "
-        "If it says 'Available Now' or a date within 2 days, count=1. "
+        "Extract apartment floor plan listings from this page. "
+        "Return ONE object per floor plan type (not per individual unit). "
+        "For each floor plan include: "
+        "  plan = the floor plan name, "
+        "  br = number of bedrooms, "
+        "  ba = number of bathrooms, "
+        "  sqft = square footage, "
+        "  rent = the lowest listed monthly rent (integer, null if 'call for pricing'), "
+        "  avail = the availability text shown (e.g. '3 Available', 'Call for details'), "
+        "  count = the number of units listed as available for that plan. "
+        "For count: use whatever number the site shows as available for that plan "
+        "('3 Available' → count=3, '1 Available' → count=1, no availability shown → count=0). "
+        "Include ALL plans even if count=0. "
+        "Do NOT try to determine move-in dates or distinguish vacant vs pre-leasing — "
+        "just use the availability number the property publishes. "
         "Return as a JSON array of objects with fields: "
         "plan (string), br (integer), ba (integer or float), sqft (integer), "
         "rent (integer or null), avail (string), count (integer)."
