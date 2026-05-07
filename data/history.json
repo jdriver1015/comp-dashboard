@@ -999,7 +999,7 @@
         "ba": 1,
         "sqft": 577,
         "rent": 999,
-        "avail": "Available now",
+        "avail": "Available Now",
         "count": 2
       },
       {
@@ -1009,7 +1009,7 @@
         "ba": 1,
         "sqft": 846,
         "rent": 1099,
-        "avail": "Available now",
+        "avail": "Available Now",
         "count": 1
       },
       {
@@ -1019,7 +1019,7 @@
         "ba": 1,
         "sqft": 944,
         "rent": null,
-        "avail": "Call for details",
+        "avail": "Available Soon",
         "count": 1
       },
       {
@@ -1029,7 +1029,7 @@
         "ba": 1,
         "sqft": 1000,
         "rent": null,
-        "avail": "Call for details",
+        "avail": "Available Soon",
         "count": 1
       },
       {
@@ -1039,7 +1039,7 @@
         "ba": 1,
         "sqft": 1098,
         "rent": null,
-        "avail": "Call for details",
+        "avail": "Available Soon",
         "count": 1
       },
       {
@@ -1049,7 +1049,7 @@
         "ba": 2,
         "sqft": 1090,
         "rent": null,
-        "avail": "Call for details",
+        "avail": "Available Soon",
         "count": 1
       },
       {
@@ -1059,7 +1059,7 @@
         "ba": 2,
         "sqft": 1188,
         "rent": 1549,
-        "avail": "Available now",
+        "avail": "Available Now",
         "count": 1
       },
       {
@@ -1069,8 +1069,18 @@
         "ba": 2,
         "sqft": 1290,
         "rent": 1699,
-        "avail": "Available now",
+        "avail": "Available Now",
         "count": 2
+      },
+      {
+        "prop": "northchase",
+        "plan": "E1",
+        "br": 3,
+        "ba": 2,
+        "sqft": 1290,
+        "rent": 1799,
+        "avail": "Available Now",
+        "count": 1
       },
       {
         "prop": "northchase",
@@ -1079,7 +1089,7 @@
         "ba": 2,
         "sqft": 1388,
         "rent": null,
-        "avail": "Call for details",
+        "avail": "Available Soon",
         "count": 1
       },
       {
@@ -1088,8 +1098,8 @@
         "br": 1,
         "ba": 1,
         "sqft": 806,
-        "rent": 1399,
-        "avail": "Available Now",
+        "rent": null,
+        "avail": "Available now!",
         "count": 2
       },
       {
@@ -1108,9 +1118,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 729,
-        "rent": 1239,
-        "avail": "Available Now",
-        "count": 3
+        "rent": null,
+        "avail": "Available now!",
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -1118,9 +1128,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 819,
-        "rent": 1269,
-        "avail": "Available Now",
-        "count": 1
+        "rent": null,
+        "avail": "Available now!",
+        "count": 2
       },
       {
         "prop": "stablechase",
@@ -1128,9 +1138,9 @@
         "br": 2,
         "ba": 1,
         "sqft": 912,
-        "rent": 1299,
-        "avail": "Available Now",
-        "count": 3
+        "rent": null,
+        "avail": "Available now!",
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -1138,9 +1148,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1118,
-        "rent": 1489,
-        "avail": "Available Now",
-        "count": 2
+        "rent": null,
+        "avail": "Available now!",
+        "count": 1
       },
       {
         "prop": "stablechase",
@@ -1148,9 +1158,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1149,
-        "rent": 1469,
-        "avail": "Available Now",
-        "count": 3
+        "rent": null,
+        "avail": "Available now!",
+        "count": 1
       },
       {
         "prop": "stablechase",
@@ -1158,8 +1168,8 @@
         "br": 3,
         "ba": 2,
         "sqft": 1299,
-        "rent": 1849,
-        "avail": "Available Now",
+        "rent": null,
+        "avail": "Available now!",
         "count": 3
       },
       {
@@ -1170,176 +1180,6 @@
         "sqft": 1439,
         "rent": null,
         "avail": "Call for details.",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Brookshire",
-        "br": 1,
-        "ba": 1,
-        "sqft": 729,
-        "rent": 1239,
-        "avail": "Available 07/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Brookshire Solarium",
-        "br": 1,
-        "ba": 1,
-        "sqft": 819,
-        "rent": 1269,
-        "avail": "Available 06/05/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Derby",
-        "br": 2,
-        "ba": 1,
-        "sqft": 912,
-        "rent": 1299,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Brookshire",
-        "br": 1,
-        "ba": 1,
-        "sqft": 729,
-        "rent": 1329,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Derby",
-        "br": 2,
-        "ba": 1,
-        "sqft": 912,
-        "rent": 1339,
-        "avail": "Available 05/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Brookshire",
-        "br": 1,
-        "ba": 1,
-        "sqft": 729,
-        "rent": 1361,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Caspian",
-        "br": 1,
-        "ba": 1,
-        "sqft": 806,
-        "rent": 1399,
-        "avail": "Available 06/09/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Derby",
-        "br": 2,
-        "ba": 1,
-        "sqft": 912,
-        "rent": 1419,
-        "avail": "Available 07/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Fox Chase",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1149,
-        "rent": 1469,
-        "avail": "Available 06/12/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Equestrian",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1118,
-        "rent": 1489,
-        "avail": "Available 07/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Caspian",
-        "br": 1,
-        "ba": 1,
-        "sqft": 806,
-        "rent": 1569,
-        "avail": "Available 05/09/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Fox Chase",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1149,
-        "rent": 1619,
-        "avail": "Available 06/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Fox Chase",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1149,
-        "rent": 1659,
-        "avail": "Available 05/09/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Equestrian",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1118,
-        "rent": 1689,
-        "avail": "Available 06/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Georgia",
-        "br": 3,
-        "ba": 2,
-        "sqft": 1299,
-        "rent": 1849,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Georgia",
-        "br": 3,
-        "ba": 2,
-        "sqft": 1299,
-        "rent": 1889,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Georgia",
-        "br": 3,
-        "ba": 2,
-        "sqft": 1299,
-        "rent": 1899,
-        "avail": "Available 06/08/26",
         "count": 1
       },
       {
