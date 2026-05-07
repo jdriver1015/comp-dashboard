@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Detail · Comp Analysis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #1e293b; line-height: 1.5; }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1a3254 100%);
+      color: #fff; padding: 22px 48px;
+      border-bottom: 4px solid var(--prop-color, #2563eb);
+      position: sticky; top: 0; z-index: 500;
+      display: flex; align-items: center; gap: 20px;
+    }
+    .back-btn {
+      color: #94a3b8; text-decoration: none; font-size: .78rem; font-weight: 600;
+      padding: 7px 14px; border: 1px solid #334155; border-radius: 7px;
+      transition: all .15s; white-space: nowrap; flex-shrink: 0;
+    }
+    .back-btn:hover { color: #fff; border-color: #64748b; background: rgba(255,255,255,.07); }
+    .header-prop { flex: 1; min-width: 0; }
+    .header-prop h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -.02em; }
+    .header-prop p  { font-size: .73rem; color: #94a3b8; margin-top: 2px; }
+    .header-badge {
+      font-size: .63rem; font-weight: 700; padding: 4px 10px; border-radius: 99px;
+      text-transform: uppercase; letter-spacing: .07em; flex-shrink: 0;
+    }
+    .badge-subject { background: #1d4ed8; color: #fff; }
+    .badge-comp    { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1340px; margin: 0 auto; padding: 36px 48px 72px; }
+    .section-hdr { display: flex; align-items: center; gap: 16px; margin: 44px 0 20px; }
+    .section-hdr:first-of-type { margin-top: 0; }
+    .section-hdr h2 {
+      font-size: .75rem; font-weight: 800; color: #0f172a;
+      text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+    }
+    .section-hdr::after { content:''; flex:1; height:2px; background:#e2e8f0; }
+
+    /* ── STAT CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .stat-card {
+      background: #fff; border-radius: 12px; padding: 22px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      border-top: 4px solid var(--prop-color, #2563eb);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .card-icon { font-size: 1.4rem; margin-bottom: 4px; }
+    .card-label {
+      font-size: .63rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: #94a3b8;
+    }
+    .card-value { font-size: 1.5rem; font-weight: 800; color: #0f172a; line-height: 1.1; margin-top: 2px; }
+    .card-sub   { font-size: .7rem; color: #64748b; }
+    .occ-hi  { color: #059669; font-weight: 700; }
+    .occ-mid { color: #d97706; font-weight: 700; }
+    .occ-lo  { color: #dc2626; font-weight: 700; }
+
+    /* ── CHARTS ── */
+    .charts-2col { display: grid; grid-template-columns: 3fr 2fr; gap: 18px; }
+    .chart-card {
+      background: #fff; border-radius: 12px; padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .chart-card h3 {
+      font-size: .67rem; font-weight: 700; color: #64748b;
+      text-transform: uppercase; letter-spacing: .07em; margin-bottom: 16px;
+    }
+    .chart-wrap { position: relative; height: 270px; }
+
+    /* ── FLOOR PLAN TABLE ── */
+    .table-wrap { background: #fff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.07); overflow: hidden; }
+    .table-wrap table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .table-wrap thead th {
+      padding: 11px 16px; text-align: left;
+      font-size: .64rem; text-transform: uppercase; letter-spacing: .07em;
+      color: #64748b; background: #f8fafc; border-bottom: 2px solid #e2e8f0; font-weight: 700;
+    }
+    .table-wrap thead th.r { text-align: right; }
+    .table-wrap thead th.c { text-align: center; }
+    .table-wrap tbody td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    .table-wrap tbody tr:last-child td { border-bottom: none; }
+    .table-wrap tbody tr:hover td { background: #f8fafc; }
+    .plan-name { font-weight: 700; font-size: .82rem; }
+    .br-pill {
+      display: inline-block; font-size: .63rem; font-weight: 700; padding: 3px 8px;
+      border-radius: 99px; background: #f1f5f9; color: #475569;
+    }
+    .rent-val { font-weight: 800; font-size: .88rem; }
+    .psf-val  { font-size: .74rem; color: #64748b; }
+    .count-bubble {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      font-size: .75rem; font-weight: 800;
+      background: var(--prop-color, #2563eb); color: #fff;
+    }
+    .avail-tag {
+      display: inline-block; font-size: .68rem; font-weight: 600;
+      padding: 3px 9px; border-radius: 6px; white-space: nowrap;
+    }
+    .avail-now    { background: #dcfce7; color: #15803d; }
+    .avail-soon   { background: #fef3c7; color: #92400e; }
+    .avail-future { background: #f1f5f9; color: #64748b; }
+    .avail-call   { background: #f1f5f9; color: #94a3b8; font-style: italic; }
+
+    /* ── CONFIDENCE NOTE ── */
+    .conf-note { font-size: .7rem; color: #94a3b8; text-align: right; margin-top: 10px; }
+    .conf-hi  { color: #15803d; font-weight: 600; }
+    .conf-mid { color: #92400e; font-weight: 600; }
+    .conf-lo  { color: #dc2626; font-weight: 600; }
+
+    /* ── EMPTY / LOADING ── */
+    .empty-row td { text-align: center; color: #94a3b8; padding: 32px !important; font-style: italic; }
+
+    @media (max-width: 1100px) {
+      .cards-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 800px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-2col { grid-template-columns: 1fr; }
+      header { padding: 16px 20px; flex-wrap: wrap; }
+      .container { padding: 20px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="pageHeader">
+  <a href="index.html" class="back-btn">← Dashboard</a>
+  <div class="header-prop">
+    <h1 id="propName">Loading…</h1>
+    <p  id="propAddress"></p>
+  </div>
+  <span id="propBadge" class="header-badge badge-comp">Competitor</span>
+</header>
+
+<div class="container">
+
+  <div class="section-hdr"><h2>Property Overview</h2></div>
+  <div id="statCards" class="cards-grid">
+    <!-- filled by JS -->
+  </div>
+
+  <div class="section-hdr"><h2>Rent Analysis</h2></div>
+  <div class="charts-2col">
+    <div class="chart-card">
+      <h3>Average Rent Over Time</h3>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Rent by Sq Ft · Current</h3>
+      <div class="chart-wrap"><canvas id="scatterChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-hdr"><h2>Available Floor Plans</h2></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Floor Plan</th>
+          <th class="c">Beds</th>
+          <th class="c">Baths</th>
+          <th class="r">Sq Ft</th>
+          <th class="r">Rent / Mo</th>
+          <th class="r">$ / Sq Ft</th>
+          <th class="c">Avail</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="unitTableBody">
+        <tr class="empty-row"><td colspan="8">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p id="confNote" class="conf-note" style="display:none"></p>
+
+</div><!-- /container -->
+
+<script>
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+const avgOf = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+
+function milesApart(lat1,lng1,lat2,lng2) {
+  const R=3958.8, dLat=(lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return +(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
+}
+
+function availClass(avail='') {
+  const t = avail.toLowerCase();
+  if (t.includes('now') || t.includes('immediately')) return 'avail-now';
+  if (t.includes('call') || t === '' || t === 'unknown') return 'avail-call';
+  if (/\d+\s+available/.test(t)) return 'avail-now';
+  return 'avail-soon';
+}
+
+// ── LOAD ──────────────────────────────────────────────────────────────────────
+const propId = new URLSearchParams(location.search).get('prop') || '';
+
+(async () => {
+  const ts = Date.now();
+  const [allProps, history] = await Promise.all([
+    fetch(`./data/properties.json?_=${ts}`).then(r=>r.json()),
+    fetch(`./data/history.json?_=${ts}`).then(r=>r.json()),
+  ]);
+
+  // ── Find metadata ─────────────────────────────────────────────────────────
+  let propMeta = null, subjMeta = null, isSubject = false;
+  for (const subj of allProps) {
+    if (subj.id === propId) { propMeta = subj; subjMeta = subj; isSubject = true; break; }
+    for (const c of (subj.comps||[])) {
+      if (c.id === propId) { propMeta = c; subjMeta = subj; break; }
+    }
+    if (propMeta) break;
+  }
+  if (!propMeta) {
+    document.getElementById('propName').textContent = 'Property not found';
+    return;
+  }
+
+  // ── CSS variable + header ─────────────────────────────────────────────────
+  const color = propMeta.color || '#2563eb';
+  document.documentElement.style.setProperty('--prop-color', color);
+  document.getElementById('propName').textContent   = propMeta.name;
+  document.getElementById('propAddress').textContent = propMeta.address || '';
+  document.title = propMeta.name + ' · Comp Detail';
+  if (isSubject) {
+    document.getElementById('propBadge').textContent  = '★ Subject Property';
+    document.getElementById('propBadge').className    = 'header-badge badge-subject';
+  }
+
+  // ── Latest data ───────────────────────────────────────────────────────────
+  const latest     = history[history.length - 1];
+  const allUnits   = latest.units || [];
+  const propUnits  = allUnits.filter(u => u.prop === propId);
+  const subjUnits  = allUnits.filter(u => u.prop === subjMeta.id);
+  const confidence = (latest.confidence || {})[propId];
+  const dateStr    = new Date(latest.date + 'T12:00:00')
+    .toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  const avail = propMeta.availUnknown ? null
+    : propUnits.reduce((s,u) => s + (u.count ?? 0), 0);
+  const total = propMeta.totalUnits || null;
+  const occ   = (avail != null && total)
+    ? Math.round((total - avail) / total * 100) : null;
+
+  const priced  = propUnits.filter(u => u.rent);
+  const avg1    = avgOf(priced.filter(u=>u.br===1).map(u=>u.rent));
+  const avg2    = avgOf(priced.filter(u=>u.br===2).map(u=>u.rent));
+  const avgAll  = avgOf(priced.map(u=>u.rent));
+  const dist    = isSubject ? '—'
+    : milesApart(subjMeta.lat, subjMeta.lng, propMeta.lat, propMeta.lng) + ' mi';
+
+  // ── Stat cards ────────────────────────────────────────────────────────────
+  const occCls  = occ==null?'':occ>=93?'occ-hi':occ>=85?'occ-mid':'occ-lo';
+  const occText = occ!=null ? `<span class="${occCls}">${occ}%</span> implied occupancy` : 'Not tracked';
+  const rentSub = [avg1?`1BR $${avg1.toLocaleString()}`:'', avg2?`2BR $${avg2.toLocaleString()}`:'']
+    .filter(Boolean).join(' · ') || 'No pricing data';
+
+  document.getElementById('statCards').innerHTML = [
+    { icon:'🏢', label:'Total Units',      value: total?.toLocaleString() || '—',         sub: `Built ${propMeta.yearBuilt||'—'}` },
+    { icon:'📍', label:'Distance',         value: dist,                                    sub: isSubject?'Subject Property':'From Lexington at Champions' },
+    { icon:'🔑', label:'Available Units',  value: avail!=null?avail:'N/A',                sub: occText },
+    { icon:'💵', label:'Avg Rent',         value: avgAll?'$'+avgAll.toLocaleString():'—', sub: rentSub },
+    { icon:'📊', label:'Data Quality',     value: confidence!=null?confidence+'%':'—',
+      sub: confidence>=80?'Per-unit dates':confidence>=55?'Aggregate counts':confidence>=25?'No avail. shown':'Scrape failed' },
+  ].map(c => `
+    <div class="stat-card">
+      <div class="card-icon">${c.icon}</div>
+      <div class="card-label">${c.label}</div>
+      <div class="card-value">${c.value}</div>
+      <div class="card-sub">${c.sub}</div>
+    </div>
+  `).join('');
+
+  // ── Trend chart ───────────────────────────────────────────────────────────
+  const dates   = history.map(s => {
+    const d = new Date(s.date+'T12:00:00');
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  });
+  const propAvg = history.map(s => avgOf((s.units||[]).filter(u=>u.prop===propId&&u.rent).map(u=>u.rent)));
+  const subjAvg = history.map(s => avgOf((s.units||[]).filter(u=>u.prop===subjMeta.id&&u.rent).map(u=>u.rent)));
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: propMeta.shortName || propMeta.name,
+          data: propAvg,
+          borderColor: color, backgroundColor: color + '18',
+          tension: .35, pointRadius: 5, pointHoverRadius: 7,
+          borderWidth: 2.5, fill: true,
+        },
+        isSubject ? null : {
+          label: '★ ' + (subjMeta.shortName || subjMeta.name),
+          data: subjAvg,
+          borderColor: subjMeta.color || '#2563eb',
+          backgroundColor: 'transparent',
+          tension: .35, pointRadius: 4, borderWidth: 2,
+          borderDash: [6, 3],
+        },
+      ].filter(Boolean),
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font:{size:11}, boxWidth:14, padding:12 } } },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:11}} },
+        y: {
+          ticks: { callback: v => '$'+v.toLocaleString(), font:{size:11} },
+          grid: { color: '#f1f5f9' },
+        },
+      },
+    },
+  });
+
+  // ── Scatter chart ─────────────────────────────────────────────────────────
+  const BR_COLORS = ['#64748b','#2563eb','#059669','#d97706','#7c3aed'];
+  const BR_LABELS = ['Studio','1 Bed','2 Bed','3 Bed','4 Bed'];
+  const byBr = {};
+  priced.forEach(u => {
+    if (!u.sqft) return;
+    const k = u.br || 0;
+    (byBr[k] = byBr[k]||[]).push({ x:u.sqft, y:u.rent, plan:u.plan, count:u.count });
+  });
+
+  new Chart(document.getElementById('scatterChart'), {
+    type: 'scatter',
+    data: {
+      datasets: Object.entries(byBr).map(([br,pts]) => ({
+        label: BR_LABELS[br] || br+'BR',
+        data: pts,
+        backgroundColor: (BR_COLORS[br] || '#64748b') + 'cc',
+        borderColor:     (BR_COLORS[br] || '#64748b'),
+        borderWidth: 1.5,
+        pointRadius: 8, pointHoverRadius: 11,
+      })),
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels:{ font:{size:11}, boxWidth:14, padding:12 } },
+        tooltip: { callbacks: { label: ctx => {
+          const d = ctx.raw;
+          return [`${d.plan}`, `${d.x.toLocaleString()} sqft  ·  $${d.y.toLocaleString()}/mo`];
+        }}},
+      },
+      scales: {
+        x: {
+          title: { display:true, text:'Sq Ft', font:{size:11} },
+          grid: { color:'#f1f5f9' }, ticks:{font:{size:11}},
+        },
+        y: {
+          title: { display:true, text:'Rent / Mo', font:{size:11} },
+          ticks: { callback: v=>'$'+v.toLocaleString(), font:{size:11} },
+          grid: { color:'#f1f5f9' },
+        },
+      },
+    },
+  });
+
+  // ── Floor plan table ──────────────────────────────────────────────────────
+  const sorted = [...propUnits].sort((a,b) => (a.br-b.br)||(a.sqft-b.sqft)||((a.rent||0)-(b.rent||0)));
+  const tbody  = document.getElementById('unitTableBody');
+
+  if (!sorted.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No floor plan data available for this property.</td></tr>';
+  } else {
+    tbody.innerHTML = sorted.map(u => {
+      const psf   = u.rent && u.sqft ? '$'+(u.rent/u.sqft).toFixed(2) : '—';
+      const cls   = availClass(u.avail);
+      const count = u.count ?? '?';
+      return `<tr>
+        <td><span class="plan-name">${u.plan||'—'}</span></td>
+        <td style="text-align:center"><span class="br-pill">${u.br}BR</span></td>
+        <td style="text-align:center">${u.ba}BA</td>
+        <td style="text-align:right">${u.sqft?.toLocaleString()||'—'}</td>
+        <td style="text-align:right"><span class="rent-val">${u.rent?'$'+u.rent.toLocaleString():'—'}</span></td>
+        <td style="text-align:right"><span class="psf-val">${psf}</span></td>
+        <td style="text-align:center"><span class="count-bubble">${count}</span></td>
+        <td><span class="avail-tag ${cls}">${u.avail||'—'}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Confidence note ───────────────────────────────────────────────────────
+  if (confidence != null) {
+    const cl = confidence>=80?'conf-hi':confidence>=55?'conf-mid':'conf-lo';
+    const note = document.getElementById('confNote');
+    note.style.display = '';
+    note.innerHTML = `Data as of ${dateStr} · Quality: <span class="${cl}">${confidence}%</span>`;
+  }
+
+})().catch(err => {
+  document.getElementById('propName').textContent = 'Error loading data';
+  console.error(err);
+});
+</script>
+</body>
+</html>

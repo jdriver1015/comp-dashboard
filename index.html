@@ -61,9 +61,10 @@
     }
     .summary-table-wrap tbody td { padding:12px 16px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
     .summary-table-wrap tbody tr:last-child td { border-bottom:none; }
-    .summary-table-wrap tbody tr:hover td { background:#f8fafc; }
+    .summary-table-wrap tbody tr:hover td { background:#f0f7ff; }
     .summary-table-wrap .subject-row td { background:#eff6ff !important; }
     .summary-table-wrap .subject-row:hover td { background:#dbeafe !important; }
+    .summary-table-wrap tbody tr[onclick]:hover td { box-shadow:inset 0 0 0 999px rgba(37,99,235,.04); }
     .prop-badge { display:inline-flex; align-items:center; gap:7px; }
     .prop-bar   { width:3px; height:20px; border-radius:2px; flex-shrink:0; }
     .prop-nm    { font-weight:700; font-size:.8rem; }
@@ -647,8 +648,8 @@ function buildSummaryTable() {
       : conf >= 25 ? '<span class="conf-tip">No avail. shown</span>'
       :              '<span class="conf-tip">Scrape failed</span>';
 
-    return `<tr class="${p.subject?'subject-row':''}">
-      <td><div class="prop-badge"><div class="prop-bar" style="background:${p.color}"></div><span class="prop-nm">${p.subject?'★ ':''}${p.name}</span></div></td>
+    return `<tr class="${p.subject?'subject-row':''}" onclick="window.location.href='property.html?prop=${key}'" style="cursor:pointer" title="View ${p.name} detail page">
+      <td><div class="prop-badge"><div class="prop-bar" style="background:${p.color}"></div><span class="prop-nm">${p.subject?'★ ':''}${p.name}</span><span style="margin-left:6px;font-size:.65rem;color:#94a3b8;font-weight:400">↗</span></div></td>
       <td class="center-td">${m.units}</td>
       <td class="center-td">${m.yearBuilt}</td>
       <td class="center-td">${dist}</td>
