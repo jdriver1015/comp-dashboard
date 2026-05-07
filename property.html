@@ -188,6 +188,50 @@
 </div><!-- /container -->
 
 <script>
+// ── EMBEDDED FALLBACK DATA (mirrors index.html defaults) ──────────────────────
+const FALLBACK_PROPS = [
+  {
+    id:'lexington', name:'Lexington at Champions', shortName:'Lexington',
+    address:'5007 FM 1960 W, Houston, TX 77069', yearBuilt:2003, totalUnits:89,
+    lat:29.983967, lng:-95.505280, color:'#2563eb',
+    comps:[
+      { id:'marquis',       name:'Marquis Champions Forest',   shortName:'Marquis',       address:'5959 FM 1960 W, Houston, TX 77069',             yearBuilt:1995, totalUnits:404, lat:29.977854, lng:-95.516432, color:'#f59e0b', availUnknown:false },
+      { id:'greenwood',     name:'Greenwood Forest',           shortName:'Greenwood',     address:'12820 Greenwood Forest Dr, Houston, TX 77066',  yearBuilt:1994, totalUnits:316, lat:29.982149, lng:-95.506107, color:'#10b981', availUnknown:false },
+      { id:'northchase',    name:'Northchase Village',         shortName:'Northchase',    address:'4522 Sylvanfield Dr, Houston, TX 77014',         yearBuilt:2007, totalUnits:232, lat:29.990100, lng:-95.515000, color:'#8b5cf6', availUnknown:true  },
+      { id:'stablechase',   name:'Club at Stablechase',        shortName:'Stablechase',   address:'13504 Schroeder Rd, Houston, TX 77070',          yearBuilt:1999, totalUnits:148, lat:29.970200, lng:-95.530500, color:'#ef4444', availUnknown:false },
+      { id:'cypress_creek', name:'Villages of Cypress Creek',  shortName:'Cypress Creek', address:'10300 Cypresswood Dr, Houston, TX 77070',        yearBuilt:2001, totalUnits:384, lat:29.991000, lng:-95.521000, color:'#06b6d4', availUnknown:false },
+    ]
+  }
+];
+
+const FALLBACK_HISTORY = [{"date":"2026-05-05","units":[
+  {"prop":"lexington","plan":"A1","br":1,"ba":1,"sqft":788,"rent":975,"avail":"Available Now","count":12},
+  {"prop":"lexington","plan":"B1","br":2,"ba":1,"sqft":954,"rent":1242,"avail":"Available Now","count":6},
+  {"prop":"lexington","plan":"B3","br":2,"ba":2,"sqft":1144,"rent":1486,"avail":"May 7, 2026","count":0},
+  {"prop":"lexington","plan":"B2","br":2,"ba":2,"sqft":1063,"rent":1505,"avail":"May 12, 2026","count":0},
+  {"prop":"lexington","plan":"B4","br":2,"ba":2,"sqft":1200,"rent":null,"avail":"Call for Pricing","count":0},
+  {"prop":"marquis","plan":"1A","br":1,"ba":1,"sqft":665,"rent":891,"avail":"Jul 8, 2026","count":0},
+  {"prop":"marquis","plan":"1B","br":1,"ba":1,"sqft":706,"rent":1061,"avail":"Available Now","count":1},
+  {"prop":"marquis","plan":"1D","br":1,"ba":1,"sqft":810,"rent":1016,"avail":"Jun 5, 2026","count":0},
+  {"prop":"marquis","plan":"1E","br":1,"ba":1,"sqft":836,"rent":1273,"avail":"Available Now","count":2},
+  {"prop":"marquis","plan":"2A","br":2,"ba":1,"sqft":880,"rent":1102,"avail":"Available Now","count":3},
+  {"prop":"marquis","plan":"2B","br":2,"ba":1,"sqft":918,"rent":1456,"avail":"Jun 12, 2026","count":0},
+  {"prop":"marquis","plan":"2C","br":2,"ba":2,"sqft":958,"rent":1139,"avail":"Available Now","count":1},
+  {"prop":"marquis","plan":"2D","br":2,"ba":2,"sqft":1054,"rent":1251,"avail":"Available Now","count":3},
+  {"prop":"marquis","plan":"2E","br":2,"ba":2,"sqft":1112,"rent":1381,"avail":"Jun 26, 2026","count":0},
+  {"prop":"marquis","plan":"2F","br":2,"ba":2,"sqft":1233,"rent":1311,"avail":"Available Now","count":1},
+  {"prop":"greenwood","plan":"A","br":1,"ba":1,"sqft":835,"rent":930,"avail":"Available Now","count":5},
+  {"prop":"greenwood","plan":"C","br":1,"ba":1,"sqft":770,"rent":1104,"avail":"Jun 2, 2026","count":0},
+  {"prop":"greenwood","plan":"D","br":2,"ba":1,"sqft":979,"rent":1055,"avail":"Available Now","count":2},
+  {"prop":"greenwood","plan":"F","br":2,"ba":2,"sqft":1176,"rent":1155,"avail":"Available Now","count":4},
+  {"prop":"greenwood","plan":"G","br":2,"ba":2,"sqft":1367,"rent":1830,"avail":"Available Now","count":1},
+  {"prop":"greenwood","plan":"H","br":3,"ba":2,"sqft":1458,"rent":1911,"avail":"Jun 25, 2026","count":0},
+  {"prop":"northchase","plan":"A1","br":1,"ba":1,"sqft":577,"rent":999,"avail":"Available Now","count":2},
+  {"prop":"northchase","plan":"B1","br":1,"ba":1,"sqft":846,"rent":1099,"avail":"Available Now","count":1},
+  {"prop":"northchase","plan":"D2","br":2,"ba":2,"sqft":1188,"rent":1549,"avail":"Available Now","count":1},
+  {"prop":"northchase","plan":"E1","br":3,"ba":2,"sqft":1290,"rent":1749,"avail":"Available Now","count":2}
+]}];
+
 // ── UTILS ─────────────────────────────────────────────────────────────────────
 const avgOf = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : null;
 
@@ -210,9 +254,13 @@ const propId = new URLSearchParams(location.search).get('prop') || '';
 
 (async () => {
   const ts = Date.now();
+  const tryFetch = async (url, fallback) => {
+    try { const r = await fetch(url); if (!r.ok) throw new Error(r.status); return await r.json(); }
+    catch { return fallback; }
+  };
   const [allProps, history] = await Promise.all([
-    fetch(`./data/properties.json?_=${ts}`).then(r=>r.json()),
-    fetch(`./data/history.json?_=${ts}`).then(r=>r.json()),
+    tryFetch(`./data/properties.json?_=${ts}`, FALLBACK_PROPS),
+    tryFetch(`./data/history.json?_=${ts}`,    FALLBACK_HISTORY),
   ]);
 
   // ── Find metadata ─────────────────────────────────────────────────────────
