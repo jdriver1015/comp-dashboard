@@ -1019,7 +1019,7 @@
         "ba": 1,
         "sqft": 944,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Call for details",
         "count": 1
       },
       {
@@ -1029,7 +1029,7 @@
         "ba": 1,
         "sqft": 1000,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Call for details",
         "count": 1
       },
       {
@@ -1039,7 +1039,7 @@
         "ba": 1,
         "sqft": 1098,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Call for details",
         "count": 1
       },
       {
@@ -1049,7 +1049,7 @@
         "ba": 2,
         "sqft": 1090,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Call for details",
         "count": 1
       },
       {
@@ -1079,7 +1079,7 @@
         "ba": 2,
         "sqft": 1388,
         "rent": null,
-        "avail": "N/A",
+        "avail": "Call for details",
         "count": 1
       },
       {
@@ -1088,7 +1088,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 806,
-        "rent": 1399,
+        "rent": null,
         "avail": "Available now!",
         "count": 2
       },
@@ -1108,9 +1108,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 729,
-        "rent": 1239,
+        "rent": null,
         "avail": "Available now!",
-        "count": 3
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -1118,7 +1118,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 819,
-        "rent": 1269,
+        "rent": null,
         "avail": "Available now!",
         "count": 1
       },
@@ -1128,7 +1128,7 @@
         "br": 2,
         "ba": 1,
         "sqft": 912,
-        "rent": 1299,
+        "rent": null,
         "avail": "Available now!",
         "count": 3
       },
@@ -1138,7 +1138,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1118,
-        "rent": 1489,
+        "rent": null,
         "avail": "Available now!",
         "count": 2
       },
@@ -1148,9 +1148,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1149,
-        "rent": 1469,
+        "rent": null,
         "avail": "Available now!",
-        "count": 3
+        "count": 2
       },
       {
         "prop": "stablechase",
@@ -1158,7 +1158,7 @@
         "br": 3,
         "ba": 2,
         "sqft": 1299,
-        "rent": 1849,
+        "rent": null,
         "avail": "Available now!",
         "count": 3
       },
@@ -1173,122 +1173,12 @@
         "count": 1
       },
       {
-        "prop": "stablechase",
-        "plan": "The Brookshire",
-        "br": 1,
-        "ba": 1,
-        "sqft": 729,
-        "rent": null,
-        "avail": "Available: 05/07/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Derby",
-        "br": 2,
-        "ba": 1,
-        "sqft": 912,
-        "rent": null,
-        "avail": "Available: 05/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Brookshire",
-        "br": 1,
-        "ba": 1,
-        "sqft": 729,
-        "rent": 1361,
-        "avail": "Available now!",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Caspian",
-        "br": 1,
-        "ba": 1,
-        "sqft": 806,
-        "rent": 1469,
-        "avail": "Available: 06/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Fox Chase",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1149,
-        "rent": 1689,
-        "avail": "Available: 06/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Equestrian",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1118,
-        "rent": 1489,
-        "avail": "Available: 07/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Georgia",
-        "br": 3,
-        "ba": 2,
-        "sqft": 1299,
-        "rent": 1889,
-        "avail": "Available now!",
-        "count": 3
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Georgia",
-        "br": 3,
-        "ba": 2,
-        "sqft": 1299,
-        "rent": 1899,
-        "avail": "Available: 05/09/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Fox Chase",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1149,
-        "rent": 1659,
-        "avail": "Available: 06/05/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Equestrian",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1118,
-        "rent": 1689,
-        "avail": "Available: 06/08/26",
-        "count": 1
-      },
-      {
-        "prop": "stablechase",
-        "plan": "The Georgia",
-        "br": 3,
-        "ba": 2,
-        "sqft": 1299,
-        "rent": 1849,
-        "avail": "Available: 06/08/26",
-        "count": 1
-      },
-      {
         "prop": "cypress_creek",
         "plan": "A3",
         "br": 1,
         "ba": 1,
         "sqft": 905,
-        "rent": 1567,
+        "rent": 1617,
         "avail": "Available Now",
         "count": 1
       },
@@ -1298,7 +1188,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 656,
-        "rent": 1213,
+        "rent": 1263,
         "avail": "Available Now",
         "count": 1
       },
@@ -1308,7 +1198,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 749,
-        "rent": 1289,
+        "rent": 1339,
         "avail": "Available Now",
         "count": 1
       },
@@ -1318,7 +1208,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 974,
-        "rent": 1571,
+        "rent": 1631,
         "avail": "Available Now",
         "count": 1
       },
@@ -1328,7 +1218,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 974,
-        "rent": 1401,
+        "rent": 1461,
         "avail": "Available Now",
         "count": 1
       },
@@ -1338,7 +1228,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1148,
-        "rent": 1623,
+        "rent": 1683,
         "avail": "Available Now",
         "count": 1
       },
@@ -1348,17 +1238,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 749,
-        "rent": 1214,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "cypress_creek",
-        "plan": "A2",
-        "br": 1,
-        "ba": 1,
-        "sqft": 749,
-        "rent": 1219,
+        "rent": 1269,
         "avail": "Available Now",
         "count": 1
       },
@@ -1368,7 +1248,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1148,
-        "rent": 1678,
+        "rent": 1738,
         "avail": "Available Jun 16",
         "count": 1
       },
@@ -1378,7 +1258,7 @@
         "br": 2,
         "ba": 1,
         "sqft": 930,
-        "rent": 1307,
+        "rent": 1317,
         "avail": "Available Jul 07",
         "count": 1
       },
@@ -1388,7 +1268,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 749,
-        "rent": 1139,
+        "rent": 1189,
         "avail": "Available Jul 08",
         "count": 1
       }
