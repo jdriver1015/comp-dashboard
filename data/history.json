@@ -940,7 +940,7 @@
         "sqft": 835,
         "rent": 925,
         "avail": "May 7",
-        "count": 5
+        "count": 1
       },
       {
         "prop": "greenwood",
@@ -950,7 +950,7 @@
         "sqft": 979,
         "rent": 1060,
         "avail": "May 8",
-        "count": 3
+        "count": 1
       },
       {
         "prop": "greenwood",
@@ -970,7 +970,7 @@
         "sqft": 1176,
         "rent": 1160,
         "avail": "May 8",
-        "count": 3
+        "count": 1
       },
       {
         "prop": "greenwood",
@@ -1088,8 +1088,8 @@
         "br": 1,
         "ba": 1,
         "sqft": 806,
-        "rent": null,
-        "avail": "Available now!",
+        "rent": 1399,
+        "avail": "Available Now",
         "count": 2
       },
       {
@@ -1108,9 +1108,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 729,
-        "rent": null,
-        "avail": "Available now!",
-        "count": 4
+        "rent": 1239,
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "stablechase",
@@ -1118,8 +1118,8 @@
         "br": 1,
         "ba": 1,
         "sqft": 819,
-        "rent": null,
-        "avail": "Available now!",
+        "rent": 1269,
+        "avail": "Available Now",
         "count": 1
       },
       {
@@ -1128,8 +1128,8 @@
         "br": 2,
         "ba": 1,
         "sqft": 912,
-        "rent": null,
-        "avail": "Available now!",
+        "rent": 1299,
+        "avail": "Available Now",
         "count": 3
       },
       {
@@ -1138,8 +1138,8 @@
         "br": 2,
         "ba": 2,
         "sqft": 1118,
-        "rent": null,
-        "avail": "Available now!",
+        "rent": 1489,
+        "avail": "Available Now",
         "count": 2
       },
       {
@@ -1148,9 +1148,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1149,
-        "rent": null,
-        "avail": "Available now!",
-        "count": 2
+        "rent": 1469,
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "stablechase",
@@ -1158,8 +1158,8 @@
         "br": 3,
         "ba": 2,
         "sqft": 1299,
-        "rent": null,
-        "avail": "Available now!",
+        "rent": 1849,
+        "avail": "Available Now",
         "count": 3
       },
       {
@@ -1170,6 +1170,176 @@
         "sqft": 1439,
         "rent": null,
         "avail": "Call for details.",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Brookshire",
+        "br": 1,
+        "ba": 1,
+        "sqft": 729,
+        "rent": 1239,
+        "avail": "Available 07/08/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Brookshire Solarium",
+        "br": 1,
+        "ba": 1,
+        "sqft": 819,
+        "rent": 1269,
+        "avail": "Available 06/05/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Derby",
+        "br": 2,
+        "ba": 1,
+        "sqft": 912,
+        "rent": 1299,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Brookshire",
+        "br": 1,
+        "ba": 1,
+        "sqft": 729,
+        "rent": 1329,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Derby",
+        "br": 2,
+        "ba": 1,
+        "sqft": 912,
+        "rent": 1339,
+        "avail": "Available 05/08/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Brookshire",
+        "br": 1,
+        "ba": 1,
+        "sqft": 729,
+        "rent": 1361,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Caspian",
+        "br": 1,
+        "ba": 1,
+        "sqft": 806,
+        "rent": 1399,
+        "avail": "Available 06/09/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Derby",
+        "br": 2,
+        "ba": 1,
+        "sqft": 912,
+        "rent": 1419,
+        "avail": "Available 07/08/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Fox Chase",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1149,
+        "rent": 1469,
+        "avail": "Available 06/12/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Equestrian",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1118,
+        "rent": 1489,
+        "avail": "Available 07/08/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Caspian",
+        "br": 1,
+        "ba": 1,
+        "sqft": 806,
+        "rent": 1569,
+        "avail": "Available 05/09/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Fox Chase",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1149,
+        "rent": 1619,
+        "avail": "Available 06/08/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Fox Chase",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1149,
+        "rent": 1659,
+        "avail": "Available 05/09/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Equestrian",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1118,
+        "rent": 1689,
+        "avail": "Available 06/08/26",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Georgia",
+        "br": 3,
+        "ba": 2,
+        "sqft": 1299,
+        "rent": 1849,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Georgia",
+        "br": 3,
+        "ba": 2,
+        "sqft": 1299,
+        "rent": 1889,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "stablechase",
+        "plan": "The Georgia",
+        "br": 3,
+        "ba": 2,
+        "sqft": 1299,
+        "rent": 1899,
+        "avail": "Available 06/08/26",
         "count": 1
       },
       {
