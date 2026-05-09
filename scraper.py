@@ -71,8 +71,9 @@ def fetch_page_text(url: str, pw) -> str:
     )
     page = ctx.new_page()
     try:
-        page.goto(url, wait_until="networkidle", timeout=45_000)
-        page.wait_for_timeout(4_000)   # extra time for lazy-loaded JS
+        # Use "domcontentloaded" first, then wait — avoids timeout on slow SPAs
+        page.goto(url, wait_until="domcontentloaded", timeout=45_000)
+        page.wait_for_timeout(6_000)   # extra time for lazy-loaded JS
 
         # Try clicking a "View All" or "See All" button if present
         for selector in [
@@ -126,11 +127,14 @@ Page text:
 """
 
 
-def extract_with_gemini(page_text: str, property_name: str, model) -> list:
+def extract_with_gemini(page_text: str, property_name: str, client) -> list:
     """Send page text to Gemini and parse the returned JSON array."""
     prompt = f'Property: "{property_name}"\n\n' + EXTRACT_PROMPT + page_text
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+        )
         raw = response.text.strip()
         # Strip accidental markdown code fences
         raw = re.sub(r"^```(?:json)?\s*", "", raw)
@@ -204,9 +208,8 @@ def scrape_all():
         print("ERROR: No sites to scrape. Check data/properties.json.", file=sys.stderr)
         sys.exit(1)
 
-    import google.generativeai as genai
-    genai.configure(api_key=GEMINI_KEY)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    from google import genai
+    client = genai.Client(api_key=GEMINI_KEY)
 
     from playwright.sync_api import sync_playwright
 
@@ -224,7 +227,7 @@ def scrape_all():
                 if not page_text:
                     print(f"    -> No page content — skipping Gemini call", file=sys.stderr)
                 else:
-                    raw_units = extract_with_gemini(page_text, site["name"], model)
+                    raw_units = extract_with_gemini(page_text, site["name"], client)
                     for u in raw_units:
                         all_units.append({
                             "prop":  site["prop"],
