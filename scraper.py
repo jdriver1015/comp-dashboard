@@ -1,14 +1,15 @@
 """
 Champions Area Apartment Comp Scraper
 Runs daily via GitHub Actions at noon CST.
-Uses Playwright (free headless browser) + Google Gemini API (free tier)
-instead of Firecrawl — no paid credits needed.
+Uses Playwright (free headless browser) + Groq API (completely free, no billing)
+to scrape Houston apartment websites and append to history.json.
 
 Setup:
-  1. Get a free Gemini API key at https://aistudio.google.com/apikey
-  2. Add it to a .env file in this directory:
-       GEMINI_API_KEY=AIza...
-     OR set it as a GitHub Actions secret named GEMINI_API_KEY.
+  1. Create a free account at https://console.groq.com
+  2. Go to API Keys → Create API Key → copy it
+  3. Add it to a .env file in this directory:
+       GROQ_API_KEY=gsk_...
+     OR set it as a GitHub Actions secret named GROQ_API_KEY.
 """
 
 import json
@@ -27,7 +28,7 @@ HISTORY_FILE    = SCRIPT_DIR / "data" / "history.json"
 PROPERTIES_FILE = SCRIPT_DIR / "data" / "properties.json"
 
 load_dotenv(SCRIPT_DIR / ".env")
-GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")
+GROQ_KEY = os.getenv("GROQ_API_KEY", "")
 
 
 # ── LOAD SITES ─────────────────────────────────────────────────────────────────
@@ -127,28 +128,29 @@ Page text:
 """
 
 
-GEMINI_MODELS = [
-    "gemini-1.5-flash",
-    "gemini-1.5-flash-8b",
-    "gemini-2.0-flash-lite",
+GROQ_MODELS = [
+    "llama-3.1-8b-instant",   # fastest, most generous free quota
+    "llama3-8b-8192",         # fallback
 ]
 
 
-def extract_with_gemini(page_text: str, property_name: str, client) -> list:
+def extract_with_groq(page_text: str, property_name: str, client) -> list:
     """
-    Send page text to Gemini and parse the returned JSON array.
-    Tries models in order; retries on 429 with the wait time from the error.
+    Send page text to Groq (free LLM API) and parse the returned JSON array.
+    Retries on 429 rate-limit errors; falls back to next model if needed.
     """
     prompt = f'Property: "{property_name}"\n\n' + EXTRACT_PROMPT + page_text
 
-    for model in GEMINI_MODELS:
+    for model in GROQ_MODELS:
         for attempt in range(3):
             try:
-                response = client.models.generate_content(
+                response = client.chat.completions.create(
                     model=model,
-                    contents=prompt,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=0.1,
+                    max_tokens=2048,
                 )
-                raw = response.text.strip()
+                raw = response.choices[0].message.content.strip()
                 # Strip accidental markdown code fences
                 raw = re.sub(r"^```(?:json)?\s*", "", raw)
                 raw = re.sub(r"\s*```$",          "", raw)
@@ -161,21 +163,16 @@ def extract_with_gemini(page_text: str, property_name: str, client) -> list:
 
             except Exception as e:
                 err = str(e)
-                # Rate limited — parse the suggested wait time and retry
-                if "429" in err or "RESOURCE_EXHAUSTED" in err:
-                    wait_match = re.search(r"retry in (\d+(?:\.\d+)?)s", err, re.I)
+                if "429" in err or "rate_limit" in err.lower():
+                    wait_match = re.search(r"try again in (\d+(?:\.\d+)?)s", err, re.I)
                     wait = float(wait_match.group(1)) + 2 if wait_match else 30
-                    # limit: 0 means this model has zero quota — skip it entirely
-                    if "limit: 0" in err:
-                        print(f"    Model {model} unavailable (quota=0), trying next…")
-                        break
                     print(f"    Rate limited on {model}, waiting {wait:.0f}s (attempt {attempt+1}/3)…")
                     time.sleep(wait)
                     continue
-                print(f"    Gemini extraction error for {property_name} [{model}]: {e}", file=sys.stderr)
+                print(f"    Groq extraction error for {property_name} [{model}]: {e}", file=sys.stderr)
                 break  # Non-rate-limit error — try next model
 
-    print(f"    All Gemini models exhausted for {property_name}", file=sys.stderr)
+    print(f"    All Groq models exhausted for {property_name}", file=sys.stderr)
     return []
 
 
@@ -226,10 +223,10 @@ def calculate_confidence(units, avail_unknown=False):
 
 # ── SCRAPE ALL ─────────────────────────────────────────────────────────────────
 def scrape_all():
-    if not GEMINI_KEY:
-        print("ERROR: No GEMINI_API_KEY found.", file=sys.stderr)
-        print("Get a free key at https://aistudio.google.com/apikey", file=sys.stderr)
-        print("Then add it to .env as:  GEMINI_API_KEY=AIza...", file=sys.stderr)
+    if not GROQ_KEY:
+        print("ERROR: No GROQ_API_KEY found.", file=sys.stderr)
+        print("Get a free key at https://console.groq.com → API Keys", file=sys.stderr)
+        print("Then add it to .env as:  GROQ_API_KEY=gsk_...", file=sys.stderr)
         sys.exit(1)
 
     sites = load_sites()
@@ -237,8 +234,8 @@ def scrape_all():
         print("ERROR: No sites to scrape. Check data/properties.json.", file=sys.stderr)
         sys.exit(1)
 
-    from google import genai
-    client = genai.Client(api_key=GEMINI_KEY)
+    from groq import Groq
+    client = Groq(api_key=GROQ_KEY)
 
     from playwright.sync_api import sync_playwright
 
@@ -254,9 +251,9 @@ def scrape_all():
             try:
                 page_text = fetch_page_text(site["url"], pw)
                 if not page_text:
-                    print(f"    -> No page content — skipping Gemini call", file=sys.stderr)
+                    print(f"    -> No page content — skipping LLM call", file=sys.stderr)
                 else:
-                    raw_units = extract_with_gemini(page_text, site["name"], client)
+                    raw_units = extract_with_groq(page_text, site["name"], client)
                     for u in raw_units:
                         all_units.append({
                             "prop":  site["prop"],
