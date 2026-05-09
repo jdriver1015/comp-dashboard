@@ -1,33 +1,36 @@
 """
 Champions Area Apartment Comp Scraper
 Runs daily via GitHub Actions at noon CST.
-Uses Firecrawl API to scrape Houston apartment websites and appends to history.json.
+Uses Playwright (free headless browser) + Google Gemini API (free tier)
+instead of Firecrawl — no paid credits needed.
 
-Setup: Add your Firecrawl API key to a .env file in this directory:
-    FIRECRAWL_API_KEY=fc-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Or set it as a Windows environment variable.
+Setup:
+  1. Get a free Gemini API key at https://aistudio.google.com/apikey
+  2. Add it to a .env file in this directory:
+       GEMINI_API_KEY=AIza...
+     OR set it as a GitHub Actions secret named GEMINI_API_KEY.
 """
 
 import json
 import os
 import re
 import sys
+import time
 from datetime import date
 from pathlib import Path
 
 from dotenv import load_dotenv
-from firecrawl import FirecrawlApp
 
 # ── CONFIG ─────────────────────────────────────────────────────────────────────
-SCRIPT_DIR = Path(__file__).parent
-HISTORY_FILE = SCRIPT_DIR / "data" / "history.json"
-
-load_dotenv(SCRIPT_DIR / ".env")
-API_KEY = os.getenv("FIRECRAWL_API_KEY", "")
-
+SCRIPT_DIR      = Path(__file__).parent
+HISTORY_FILE    = SCRIPT_DIR / "data" / "history.json"
 PROPERTIES_FILE = SCRIPT_DIR / "data" / "properties.json"
 
+load_dotenv(SCRIPT_DIR / ".env")
+GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")
 
+
+# ── LOAD SITES ─────────────────────────────────────────────────────────────────
 def load_sites():
     """Build the scrape list from data/properties.json (subjects + all comps)."""
     if not PROPERTIES_FILE.exists():
@@ -51,53 +54,96 @@ def load_sites():
     return sites
 
 
-def build_extract_prompt():
-    return (
-        "Extract apartment floor plan listings from this page. "
-        "Return ONE object per floor plan type (not per individual unit). "
-        "For each floor plan include: "
-        "  plan = the floor plan name, "
-        "  br = number of bedrooms, "
-        "  ba = number of bathrooms, "
-        "  sqft = square footage, "
-        "  rent = the lowest listed monthly rent (integer, null if 'call for pricing'), "
-        "  avail = the availability text shown, "
-        "  count = the TOTAL number of units available for that plan. "
-        "Rules for calculating count: "
-        "  - If the page shows one featured unit PLUS an 'X Other Available Units' link, "
-        "    count = 1 + X. Example: shows 1 unit + '3 Other Available Units' → count=4. "
-        "  - If it says 'Last Available' (with no other units link), count = 1. "
-        "  - If it says 'X Available' directly, count = X. "
-        "  - If it says 'Call for pricing' or shows no availability, count = 0. "
-        "Do NOT try to distinguish vacant vs pre-leasing — "
-        "use whatever total the property publishes as available. "
-        "Return as a JSON array of objects with fields: "
-        "plan (string), br (integer), ba (integer or float), sqft (integer), "
-        "rent (integer or null), avail (string), count (integer)."
+# ── PLAYWRIGHT PAGE FETCH ──────────────────────────────────────────────────────
+def fetch_page_text(url: str, pw) -> str:
+    """
+    Render the page with a headless Chromium browser and return
+    the visible text content (trimmed to 14k chars for Gemini).
+    """
+    browser = pw.chromium.launch(headless=True)
+    ctx = browser.new_context(
+        user_agent=(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
+        viewport={"width": 1280, "height": 900},
     )
+    page = ctx.new_page()
+    try:
+        page.goto(url, wait_until="networkidle", timeout=45_000)
+        page.wait_for_timeout(4_000)   # extra time for lazy-loaded JS
+
+        # Try clicking a "View All" or "See All" button if present
+        for selector in [
+            'button:has-text("View All")',
+            'button:has-text("See All")',
+            'a:has-text("View All Floorplans")',
+            '[data-tab="availability"]',
+        ]:
+            try:
+                btn = page.locator(selector).first
+                if btn.is_visible(timeout=1_000):
+                    btn.click()
+                    page.wait_for_timeout(2_000)
+                    break
+            except Exception:
+                pass
+
+        text = page.inner_text("body")
+        return text[:14_000]          # ~3k tokens, well inside Gemini's free limit
+    except Exception as e:
+        print(f"    Playwright error fetching {url}: {e}", file=sys.stderr)
+        return ""
+    finally:
+        ctx.close()
+        browser.close()
 
 
-EXTRACT_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "units": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "plan":  {"type": "string"},
-                    "br":    {"type": "integer"},
-                    "ba":    {"type": ["integer", "number"]},
-                    "sqft":  {"type": "integer"},
-                    "rent":  {"type": ["integer", "null"]},
-                    "avail": {"type": "string"},
-                    "count": {"type": "integer"},
-                },
-                "required": ["plan", "br", "sqft"],
-            },
-        }
-    },
-}
+# ── GEMINI EXTRACTION ──────────────────────────────────────────────────────────
+EXTRACT_PROMPT = """You are extracting apartment floor plan data from the text of an apartment website.
+
+Return ONE JSON object per floor plan TYPE (not per individual unit).
+For each floor plan include:
+  plan  = floor plan name or code (string)
+  br    = bedrooms (integer)
+  ba    = bathrooms (integer or float)
+  sqft  = square footage (integer)
+  rent  = lowest listed monthly rent (integer), or null if "call for pricing"
+  avail = the availability text shown on the page (string)
+  count = TOTAL number of units available for that plan (integer)
+
+Rules for count:
+  - "X Available" directly → count = X
+  - Shows 1 featured unit PLUS "X Other Available Units" link → count = 1 + X
+  - "Last Available" (no other units) → count = 1
+  - "Call for pricing" or no availability shown → count = 0
+
+Return ONLY a valid JSON array — no markdown fences, no explanation.
+Example: [{"plan":"A1","br":1,"ba":1,"sqft":750,"rent":1200,"avail":"Available Now","count":3}]
+
+Page text:
+"""
+
+
+def extract_with_gemini(page_text: str, property_name: str, model) -> list:
+    """Send page text to Gemini and parse the returned JSON array."""
+    prompt = f'Property: "{property_name}"\n\n' + EXTRACT_PROMPT + page_text
+    try:
+        response = model.generate_content(prompt)
+        raw = response.text.strip()
+        # Strip accidental markdown code fences
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```$",          "", raw)
+        data = json.loads(raw)
+        if isinstance(data, list):
+            return data
+        if isinstance(data, dict) and "units" in data:
+            return data["units"]
+        return []
+    except Exception as e:
+        print(f"    Gemini extraction error for {property_name}: {e}", file=sys.stderr)
+        return []
 
 
 # ── CONFIDENCE SCORING ─────────────────────────────────────────────────────────
@@ -105,136 +151,103 @@ def calculate_confidence(units, avail_unknown=False):
     """
     Returns a confidence % (0-100) reflecting how reliable the availability
     data is for this property.
-
-    90 = per-unit 'Available Now' / specific dates  (high quality)
-    70 = mix of per-unit and aggregate counts        (medium quality)
-    50 = aggregate counts only ('X Available')       (lower quality)
-    25 = property known not to publish availability  (availUnknown flag)
-    15 = no units scraped at all                     (scrape failed)
+    90 = per-unit 'Available Now' / specific dates   (high quality)
+    70 = mix of per-unit and aggregate counts         (medium quality)
+    50 = aggregate counts only ('X Available')        (lower quality)
+    25 = property known not to publish availability   (availUnknown flag)
+    15 = no units scraped at all                      (scrape failed)
     """
     if avail_unknown:
         return 25
-
     if not units:
         return 15
 
-    total = len(units)
-    avail_now  = 0
-    dated      = 0
-    aggregate  = 0
-
-    date_pattern = re.compile(r'\d{1,2}/\d{1,2}/\d{2,4}')
+    total         = len(units)
+    avail_now     = 0
+    dated         = 0
+    aggregate     = 0
+    date_pattern  = re.compile(r"\d{1,2}/\d{1,2}/\d{2,4}")
     month_pattern = re.compile(
-        r'\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b', re.I
+        r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b", re.I
     )
-    agg_pattern = re.compile(r'\d+\s+available', re.I)
+    agg_pattern   = re.compile(r"\d+\s+available", re.I)
 
     for u in units:
-        avail_text = str(u.get("avail", "")).lower().strip()
-        if "available now" in avail_text or "available immediately" in avail_text:
+        t = str(u.get("avail", "")).lower().strip()
+        if "available now" in t or "available immediately" in t:
             avail_now += 1
-        elif date_pattern.search(avail_text) or month_pattern.search(avail_text):
+        elif date_pattern.search(t) or month_pattern.search(t):
             dated += 1
-        elif agg_pattern.search(avail_text):
+        elif agg_pattern.search(t):
             aggregate += 1
 
     per_unit_ratio = (avail_now + dated) / total
     agg_ratio      = aggregate / total
 
-    if per_unit_ratio >= 0.7:
-        return 90   # Strong per-unit signal
-    elif per_unit_ratio >= 0.4:
-        return 70   # Decent per-unit signal
-    elif per_unit_ratio >= 0.1:
-        return 55   # Weak per-unit signal
-    elif agg_ratio >= 0.5:
-        return 50   # Aggregate counts only
-    else:
-        return 35   # Little or no availability data
+    if   per_unit_ratio >= 0.7: return 90
+    elif per_unit_ratio >= 0.4: return 70
+    elif per_unit_ratio >= 0.1: return 55
+    elif agg_ratio      >= 0.5: return 50
+    else:                       return 35
 
 
-# ── SCRAPE ─────────────────────────────────────────────────────────────────────
+# ── SCRAPE ALL ─────────────────────────────────────────────────────────────────
 def scrape_all():
-    if not API_KEY:
-        print("ERROR: No FIRECRAWL_API_KEY found.", file=sys.stderr)
-        print("Create a .env file in the comp-dashboard folder with:", file=sys.stderr)
-        print("  FIRECRAWL_API_KEY=fc-your-key-here", file=sys.stderr)
+    if not GEMINI_KEY:
+        print("ERROR: No GEMINI_API_KEY found.", file=sys.stderr)
+        print("Get a free key at https://aistudio.google.com/apikey", file=sys.stderr)
+        print("Then add it to .env as:  GEMINI_API_KEY=AIza...", file=sys.stderr)
         sys.exit(1)
 
     sites = load_sites()
     if not sites:
-        print("ERROR: No sites to scrape. Add properties to data/properties.json.", file=sys.stderr)
+        print("ERROR: No sites to scrape. Check data/properties.json.", file=sys.stderr)
         sys.exit(1)
 
-    app = FirecrawlApp(api_key=API_KEY)
+    import google.generativeai as genai
+    genai.configure(api_key=GEMINI_KEY)
+    model = genai.GenerativeModel("gemini-1.5-flash")
+
+    from playwright.sync_api import sync_playwright
+
     all_units      = []
     confidence_map = {}
     today_str      = str(date.today())
     print(f"[{today_str}] Starting comp scrape — {len(sites)} site(s)...")
 
-    for site in sites:
-        print(f"  Scraping {site['name']}...")
-        raw_units = []
-        try:
-            extract_params = {
-                "prompt": build_extract_prompt(),
-                "schema": EXTRACT_SCHEMA,
-            }
-            # Handle firecrawl-py v1 (scrape_url) and v2 (scrape)
-            if hasattr(app, "scrape_url"):
-                try:
-                    result = app.scrape_url(
-                        site["url"],
-                        formats=["extract"],
-                        extract=extract_params,
-                    )
-                except TypeError:
-                    result = app.scrape_url(
-                        site["url"],
-                        params={"formats": ["extract"], "extract": extract_params},
-                    )
-            else:
-                result = app.scrape(
-                    site["url"],
-                    formats=["extract"],
-                    extract=extract_params,
-                )
+    with sync_playwright() as pw:
+        for site in sites:
+            print(f"  Scraping {site['name']}...")
+            raw_units = []
+            try:
+                page_text = fetch_page_text(site["url"], pw)
+                if not page_text:
+                    print(f"    -> No page content — skipping Gemini call", file=sys.stderr)
+                else:
+                    raw_units = extract_with_gemini(page_text, site["name"], model)
+                    for u in raw_units:
+                        all_units.append({
+                            "prop":  site["prop"],
+                            "plan":  str(u.get("plan", "")).strip() or "N/A",
+                            "br":    int(u.get("br") or 0),
+                            "ba":    u.get("ba") or 1,
+                            "sqft":  int(u.get("sqft") or 0),
+                            "rent":  int(u["rent"]) if u.get("rent") else None,
+                            "avail": str(u.get("avail", "")).strip() or "Unknown",
+                            "count": int(u["count"]) if u.get("count") is not None else 1,
+                        })
+                    print(f"    -> {len(raw_units)} unit(s) extracted")
 
-            # Parse result (dict = older v1, object = newer)
-            if isinstance(result, dict):
-                data = result.get("extract") or result.get("llm_extraction")
-            elif hasattr(result, "extract"):
-                data = result.extract
-            else:
-                data = None
+                # Respect Gemini free-tier rate limit (15 req/min)
+                time.sleep(5)
 
-            if data:
-                if isinstance(data, dict) and "units" in data:
-                    raw_units = data["units"]
-                elif isinstance(data, list):
-                    raw_units = data
+            except Exception as e:
+                print(f"    ERROR scraping {site['name']}: {e}", file=sys.stderr)
 
-            for u in raw_units:
-                all_units.append({
-                    "prop":  site["prop"],
-                    "plan":  str(u.get("plan", "")).strip() or "N/A",
-                    "br":    int(u.get("br") or 0),
-                    "ba":    u.get("ba") or 1,
-                    "sqft":  int(u.get("sqft") or 0),
-                    "rent":  int(u["rent"]) if u.get("rent") else None,
-                    "avail": str(u.get("avail", "")).strip() or "Unknown",
-                    "count": int(u["count"]) if u.get("count") is not None else 1,
-                })
-
-            print(f"    -> {len(raw_units)} unit(s) extracted")
-
-        except Exception as e:
-            print(f"    ERROR scraping {site['name']}: {e}", file=sys.stderr)
-
-        confidence_map[site["prop"]] = calculate_confidence(
-            raw_units, avail_unknown=site.get("availUnknown", False)
-        )
-        print(f"    -> confidence: {confidence_map[site['prop']]}%")
+            confidence_map[site["prop"]] = calculate_confidence(
+                raw_units, avail_unknown=site.get("availUnknown", False)
+            )
+            print(f"    -> confidence: {confidence_map[site['prop']]}%")
 
     return all_units, confidence_map
 
@@ -243,14 +256,13 @@ def scrape_all():
 def update_history(units, confidence_map):
     today = str(date.today())
 
+    history = []
     if HISTORY_FILE.exists():
         with open(HISTORY_FILE, encoding="utf-8") as f:
             history = json.load(f)
-    else:
-        history = []
 
+    entry    = {"date": today, "units": units, "confidence": confidence_map}
     existing = next((i for i, s in enumerate(history) if s["date"] == today), None)
-    entry = {"date": today, "units": units, "confidence": confidence_map}
 
     if existing is not None:
         history[existing] = entry
@@ -262,7 +274,6 @@ def update_history(units, confidence_map):
     HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(history, f, indent=2, ensure_ascii=False)
-
     print(f"  Saved -> {HISTORY_FILE}")
 
 
