@@ -127,27 +127,56 @@ Page text:
 """
 
 
+GEMINI_MODELS = [
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
+    "gemini-2.0-flash-lite",
+]
+
+
 def extract_with_gemini(page_text: str, property_name: str, client) -> list:
-    """Send page text to Gemini and parse the returned JSON array."""
+    """
+    Send page text to Gemini and parse the returned JSON array.
+    Tries models in order; retries on 429 with the wait time from the error.
+    """
     prompt = f'Property: "{property_name}"\n\n' + EXTRACT_PROMPT + page_text
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-        )
-        raw = response.text.strip()
-        # Strip accidental markdown code fences
-        raw = re.sub(r"^```(?:json)?\s*", "", raw)
-        raw = re.sub(r"\s*```$",          "", raw)
-        data = json.loads(raw)
-        if isinstance(data, list):
-            return data
-        if isinstance(data, dict) and "units" in data:
-            return data["units"]
-        return []
-    except Exception as e:
-        print(f"    Gemini extraction error for {property_name}: {e}", file=sys.stderr)
-        return []
+
+    for model in GEMINI_MODELS:
+        for attempt in range(3):
+            try:
+                response = client.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                )
+                raw = response.text.strip()
+                # Strip accidental markdown code fences
+                raw = re.sub(r"^```(?:json)?\s*", "", raw)
+                raw = re.sub(r"\s*```$",          "", raw)
+                data = json.loads(raw)
+                if isinstance(data, list):
+                    return data
+                if isinstance(data, dict) and "units" in data:
+                    return data["units"]
+                return []
+
+            except Exception as e:
+                err = str(e)
+                # Rate limited — parse the suggested wait time and retry
+                if "429" in err or "RESOURCE_EXHAUSTED" in err:
+                    wait_match = re.search(r"retry in (\d+(?:\.\d+)?)s", err, re.I)
+                    wait = float(wait_match.group(1)) + 2 if wait_match else 30
+                    # limit: 0 means this model has zero quota — skip it entirely
+                    if "limit: 0" in err:
+                        print(f"    Model {model} unavailable (quota=0), trying next…")
+                        break
+                    print(f"    Rate limited on {model}, waiting {wait:.0f}s (attempt {attempt+1}/3)…")
+                    time.sleep(wait)
+                    continue
+                print(f"    Gemini extraction error for {property_name} [{model}]: {e}", file=sys.stderr)
+                break  # Non-rate-limit error — try next model
+
+    print(f"    All Gemini models exhausted for {property_name}", file=sys.stderr)
+    return []
 
 
 # ── CONFIDENCE SCORING ─────────────────────────────────────────────────────────
