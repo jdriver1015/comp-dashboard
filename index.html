@@ -233,7 +233,7 @@
 <header>
   <div class="header-row">
     <div style="display:flex;align-items:center;gap:16px">
-      <a href="properties.html" id="backBtn" style="display:none;color:#93c5fd;font-size:.78rem;font-weight:600;text-decoration:none;white-space:nowrap;padding:5px 12px;border:1px solid #334155;border-radius:20px;transition:background .15s" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='transparent'">← Portfolio</a>
+      <a href="properties.html" id="backBtn" style="display:none;color:#93c5fd;font-size:.78rem;font-weight:600;text-decoration:none;white-space:nowrap;padding:5px 12px;border:1px solid #334155;border-radius:20px;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='transparent'">← Portfolio</a>
       <div>
         <h1 id="headerTitle">Champions Area · Apartment Comp Analysis</h1>
         <p id="headerSubtitle">Northwest Houston, TX · Loading…</p>
@@ -476,30 +476,54 @@
 // ── CONFIG ─────────────────────────────────────────────────────────────────────
 const LS_KEY = 'cr_cap_props';
 const PALETTE = ['#2563eb','#f59e0b','#10b981','#8b5cf6','#ef4444','#06b6d4','#84cc16','#f43f5e'];
-const DEFAULT_SUBJECT = { id:'lexington', name:'Lexington at Champions', shortName:'Lexington', yearBuilt:2003, totalUnits:89, lat:29.983967, lng:-95.505280, color:'#2563eb' };
-const DEFAULT_COMPS = [
-  { id:'marquis',       name:'Marquis Champions Forest',  shortName:'Marquis',       yearBuilt:1995, totalUnits:404, lat:29.977854, lng:-95.516432, color:'#f59e0b', availUnknown:false },
-  { id:'greenwood',     name:'Greenwood Forest',           shortName:'Greenwood',     yearBuilt:1994, totalUnits:316, lat:29.982149, lng:-95.506107, color:'#10b981', availUnknown:false },
-  { id:'northchase',    name:'Northchase Village',         shortName:'Northchase',    yearBuilt:2007, totalUnits:232, lat:29.990100, lng:-95.515000, color:'#8b5cf6', availUnknown:true  },
-  { id:'stablechase',   name:'Club at Stablechase',        shortName:'Stablechase',   yearBuilt:1999, totalUnits:148, lat:29.970200, lng:-95.530500, color:'#ef4444', availUnknown:false },
-  { id:'cypress_creek', name:'Villages of Cypress Creek',  shortName:'Cypress Creek', yearBuilt:2001, totalUnits:384, lat:29.991000, lng:-95.521000, color:'#06b6d4', availUnknown:false },
-];
+
+// ── BUILT-IN PORTFOLIO (all subject properties + their comps) ─────────────────
+const PORTFOLIO = {
+  lexington: {
+    subject: { id:'lexington', name:'Lexington at Champions', shortName:'Lexington', yearBuilt:2003, totalUnits:89, lat:29.983967, lng:-95.505280, color:'#2563eb' },
+    comps: [
+      { id:'marquis',       name:'Marquis Champions Forest',  shortName:'Marquis',       yearBuilt:1995, totalUnits:404, lat:29.977854, lng:-95.516432, color:'#f59e0b', availUnknown:false },
+      { id:'greenwood',     name:'Greenwood Forest',           shortName:'Greenwood',     yearBuilt:1994, totalUnits:316, lat:29.982149, lng:-95.506107, color:'#10b981', availUnknown:false },
+      { id:'northchase',    name:'Northchase Village',         shortName:'Northchase',    yearBuilt:2007, totalUnits:232, lat:29.990100, lng:-95.515000, color:'#8b5cf6', availUnknown:true  },
+      { id:'stablechase',   name:'Club at Stablechase',        shortName:'Stablechase',   yearBuilt:1999, totalUnits:148, lat:29.970200, lng:-95.530500, color:'#ef4444', availUnknown:false },
+      { id:'cypress_creek', name:'Villages of Cypress Creek',  shortName:'Cypress Creek', yearBuilt:2001, totalUnits:384, lat:29.991000, lng:-95.521000, color:'#06b6d4', availUnknown:false },
+    ]
+  },
+  captains_landing: {
+    subject: { id:'captains_landing', name:"Captain's Landing", shortName:"Captain's Landing", yearBuilt:1983, totalUnits:390, lat:29.2858, lng:-94.8260, color:'#0ea5e9' },
+    comps: [
+      { id:'village_by_the_sea', name:'Village by the Sea',      shortName:'Village by Sea', yearBuilt:1984, totalUnits:241, lat:29.2815, lng:-94.9160, color:'#f59e0b', availUnknown:false },
+      { id:'west_beach',         name:'Residence at West Beach',  shortName:'West Beach',     yearBuilt:1976, totalUnits:133, lat:29.2840, lng:-94.8265, color:'#8b5cf6', availUnknown:false },
+    ]
+  },
+};
 
 let PROPS = {}, META = {}, PROP_KEYS = [], subjectId = 'lexington';
 
 function initConfig() {
-  const urlId  = new URLSearchParams(window.location.search).get('id');
-  let subject = DEFAULT_SUBJECT, comps = DEFAULT_COMPS;
+  const urlId = new URLSearchParams(window.location.search).get('id') || 'lexington';
+  let subject, comps;
 
-  if (urlId) {
+  // Check built-in portfolio first
+  if (PORTFOLIO[urlId]) {
+    subject = PORTFOLIO[urlId].subject;
+    comps   = PORTFOLIO[urlId].comps;
+    document.getElementById('backBtn').style.display = '';
+  } else {
+    // Fall back to localStorage (user-added properties)
     const stored = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
     const found  = stored.find(p => p.id === urlId);
     if (found) {
       subject = found;
       comps   = found.comps || [];
-      document.getElementById('backBtn').style.display          = '';
-      document.getElementById('addCompBtn').style.display       = '';
+      document.getElementById('backBtn').style.display           = '';
+      document.getElementById('addCompBtn').style.display        = '';
       document.getElementById('deletePropertyBtn').style.display = '';
+    } else {
+      // Final fallback — default to Lexington
+      subject = PORTFOLIO.lexington.subject;
+      comps   = PORTFOLIO.lexington.comps;
+      document.getElementById('backBtn').style.display = '';
     }
   }
 
@@ -573,8 +597,9 @@ async function loadData() {
   latestConfidence = latest.confidence || {};
 
   const d = new Date(latest.date+'T12:00:00');
+  const marketLabel = subjectId === 'captains_landing' ? 'Galveston Island, TX' : 'Northwest Houston, TX';
   document.getElementById('headerSubtitle').textContent =
-    `Northwest Houston, TX · ${d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${PROP_KEYS.length} Properties · ${latestUnits.length} Floorplans`;
+    `${marketLabel} · ${d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${PROP_KEYS.length} Properties · ${latestUnits.length} Floorplans`;
   document.getElementById('snapshotCount').textContent = history.length;
 
   buildStatCards();
