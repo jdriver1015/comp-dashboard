@@ -2895,9 +2895,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 665,
-        "rent": 940,
+        "rent": 1195,
         "avail": "Available Now",
-        "count": 3
+        "count": 1
       },
       {
         "prop": "marquis",
@@ -2980,16 +2980,6 @@
         "count": 1
       },
       {
-        "prop": "marquis",
-        "plan": "2F",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1233,
-        "rent": 1355,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
         "prop": "greenwood",
         "plan": "A",
         "br": 1,
@@ -3037,7 +3027,7 @@
         "sqft": 1176,
         "rent": 1195,
         "avail": "Available Now",
-        "count": 3
+        "count": 2
       },
       {
         "prop": "greenwood",
@@ -3055,9 +3045,9 @@
         "br": 3,
         "ba": 2,
         "sqft": 1458,
-        "rent": 1871,
-        "avail": "Available Now",
-        "count": 2
+        "rent": 1901,
+        "avail": "Last Available",
+        "count": 1
       },
       {
         "prop": "northchase",
@@ -3177,7 +3167,7 @@
         "sqft": 729,
         "rent": 1239,
         "avail": "Available Now",
-        "count": 3
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -3187,7 +3177,7 @@
         "sqft": 819,
         "rent": 1269,
         "avail": "Available Now",
-        "count": 1
+        "count": 2
       },
       {
         "prop": "stablechase",
@@ -3197,7 +3187,7 @@
         "sqft": 912,
         "rent": 1299,
         "avail": "Available Now",
-        "count": 3
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -3207,7 +3197,7 @@
         "sqft": 1118,
         "rent": 1489,
         "avail": "Available Now",
-        "count": 3
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -3217,7 +3207,7 @@
         "sqft": 1149,
         "rent": 1469,
         "avail": "Available Now",
-        "count": 3
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -3227,7 +3217,7 @@
         "sqft": 1299,
         "rent": 1849,
         "avail": "Available Now",
-        "count": 3
+        "count": 4
       },
       {
         "prop": "stablechase",
@@ -3238,6 +3228,56 @@
         "rent": null,
         "avail": "Available Now",
         "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "A1",
+        "br": 1,
+        "ba": 1,
+        "sqft": 656,
+        "rent": 1263,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "A2",
+        "br": 1,
+        "ba": 1,
+        "sqft": 749,
+        "rent": 1269,
+        "avail": "Available Now",
+        "count": 3
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B1",
+        "br": 2,
+        "ba": 1,
+        "sqft": 930,
+        "rent": 1330,
+        "avail": "Available Jul 07",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B2",
+        "br": 2,
+        "ba": 2,
+        "sqft": 974,
+        "rent": 1631,
+        "avail": "Available Now",
+        "count": 2
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B5",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1148,
+        "rent": 1683,
+        "avail": "Available Now",
+        "count": 2
       },
       {
         "prop": "captains_landing",
@@ -3261,23 +3301,23 @@
       },
       {
         "prop": "captains_landing",
-        "plan": "Harmony",
-        "br": 1,
-        "ba": 1,
-        "sqft": 640,
-        "rent": 933,
+        "plan": "Hope",
+        "br": 2,
+        "ba": 2,
+        "sqft": 970,
+        "rent": 1253,
         "avail": "Available Now",
         "count": 2
       },
       {
         "prop": "captains_landing",
-        "plan": "Hope",
-        "br": 2,
-        "ba": 2,
-        "sqft": 970,
-        "rent": 1280,
-        "avail": "Available Now",
-        "count": 2
+        "plan": "Harmony",
+        "br": 1,
+        "ba": 1,
+        "sqft": 640,
+        "rent": 1038,
+        "avail": "Last Available",
+        "count": 1
       },
       {
         "prop": "captains_landing",
@@ -3285,9 +3325,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 661,
-        "rent": 1055,
-        "avail": "Last Available",
-        "count": 1
+        "rent": null,
+        "avail": "Call for info",
+        "count": 0
       },
       {
         "prop": "captains_landing",
@@ -3297,36 +3337,6 @@
         "sqft": 853,
         "rent": null,
         "avail": "Call for info",
-        "count": 0
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "A1",
-        "br": 1,
-        "ba": 1,
-        "sqft": 750,
-        "rent": null,
-        "avail": "Available Now",
-        "count": 0
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "A2",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1000,
-        "rent": null,
-        "avail": "Available Now",
-        "count": 0
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "A3",
-        "br": 3,
-        "ba": 2.5,
-        "sqft": 1250,
-        "rent": null,
-        "avail": "Available Now",
         "count": 0
       },
       {
@@ -3393,12 +3403,12 @@
     "confidence": {
       "lexington": 90,
       "marquis": 70,
-      "greenwood": 90,
+      "greenwood": 70,
       "northchase": 25,
       "stablechase": 90,
-      "cypress_creek": 15,
+      "cypress_creek": 90,
       "captains_landing": 70,
-      "village_by_the_sea": 90,
+      "village_by_the_sea": 15,
       "west_beach": 90
     }
   }
