@@ -581,11 +581,18 @@ function avgPsfOf(arr) {
 }
 
 function getFilteredHistory() {
-  if (dateRange === 'all' || history.length <= 1) return history;
-  const days   = parseInt(dateRange);
-  const cutoff = new Date(Date.now() - days * 86_400_000);
-  const filtered = history.filter(s => new Date(s.date+'T12:00:00') >= cutoff);
-  return filtered.length ? filtered : history;
+  let hist = history;
+  // Apply date range filter
+  if (dateRange !== 'all' && history.length > 1) {
+    const days   = parseInt(dateRange);
+    const cutoff = new Date(Date.now() - days * 86_400_000);
+    const filtered = hist.filter(s => new Date(s.date+'T12:00:00') >= cutoff);
+    if (filtered.length) hist = filtered;
+  }
+  // Trim leading snapshots that have no data for this portfolio,
+  // so each property's charts start at the first date it has data.
+  const firstIdx = hist.findIndex(s => (s.units||[]).some(u => PROP_KEYS.includes(u.prop)));
+  return firstIdx > 0 ? hist.slice(firstIdx) : hist;
 }
 
 function dateLabels(hist) {
