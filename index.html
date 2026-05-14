@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comp Analysis</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -88,13 +86,16 @@
     .chart-wrap  { position:relative; height:290px; }
     .chart-wrap-sm { position:relative; height:260px; }
 
-    /* ── MAP ── */
-    .map-card { background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.07); overflow:hidden; }
-    #map { height:420px; }
-    .leaflet-popup-content-wrapper { border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.15); }
-    .map-popup h4 { font-size:.85rem; font-weight:700; margin-bottom:4px; }
-    .map-popup p  { font-size:.75rem; color:#64748b; margin:1px 0; }
-    .map-popup .rent-range { font-size:.8rem; font-weight:700; color:#0f172a; margin-top:6px; }
+    /* ── DATE RANGE ── */
+    .range-btn {
+      display:inline-flex; align-items:center; padding:5px 13px;
+      border-radius:24px; cursor:pointer; font-size:.75rem; font-weight:700;
+      border:2px solid #334155; color:#334155; background:white;
+      transition:background .12s,color .12s; user-select:none;
+    }
+    .range-btn.active { background:#334155; color:white; }
+    .range-btn:hover:not(.active) { background:#f1f5f9; }
+    .charts-2col-trends { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
 
     /* ── FLOORPLAN TABLE ── */
     .table-card    { background:#fff; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.07); overflow:hidden; }
@@ -165,7 +166,7 @@
     .line-key-item { display:flex; align-items:center; gap:5px; font-size:.72rem; color:#64748b; font-weight:600; }
     .lk-solid  { display:inline-block; width:20px; height:2.5px; background:#64748b; border-radius:2px; }
     .lk-dashed { display:inline-block; width:20px; height:0; border-top:2.5px dashed #64748b; }
-    .trend-chart-wrap { position:relative; height:460px; }
+    .trend-chart-wrap { position:relative; height:280px; }
     .single-note { text-align:center; padding:8px 0 0; font-size:.72rem; color:#94a3b8; border-top:1px solid #f1f5f9; margin-top:14px; }
 
     footer { text-align:center; padding:24px; font-size:.72rem; color:#94a3b8; }
@@ -311,10 +312,6 @@
     </div>
   </div>
 
-  <!-- ═══ SECTION: MAP ═══ -->
-  <div class="section-hdr"><h2>Property Locations</h2></div>
-  <div class="map-card"><div id="map"></div></div>
-
   <!-- ═══ SECTION: FLOORPLAN DETAIL ═══ -->
   <div class="section-hdr"><h2>Floorplan Detail</h2></div>
   <div class="table-card">
@@ -346,8 +343,8 @@
   <div class="trends-toolbar">
     <div class="toolbar-top">
       <div>
-        <h2>Daily Snapshot History — 1 &amp; 2 Bedroom</h2>
-        <p>Toggle properties and bedroom types. Both charts update together.</p>
+        <h2>Daily Snapshot History</h2>
+        <p>1 &amp; 2 Bedroom shown in separate charts. Toggle properties or date range.</p>
       </div>
       <div class="snapshot-badge">
         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
@@ -358,40 +355,44 @@
       <span class="toggle-label">Property</span>
     </div>
     <div class="toggle-row">
-      <span class="toggle-label">Bedrooms</span>
-      <div class="br-toggle active" id="br-toggle-1" onclick="toggleBr(1,this)">
-        <span style="display:inline-block;width:16px;height:2px;background:white;vertical-align:middle"></span>
-        1 Bedroom
-      </div>
-      <div class="br-toggle active" id="br-toggle-2" onclick="toggleBr(2,this)">
-        <span style="display:inline-block;width:16px;vertical-align:middle;border-top:2px dashed white"></span>
-        2 Bedroom
-      </div>
+      <span class="toggle-label">Date Range</span>
+      <div class="range-btn active" id="range-all" onclick="setDateRange('all',this)">All Time</div>
+      <div class="range-btn" id="range-90"  onclick="setDateRange('90',this)">90 Days</div>
+      <div class="range-btn" id="range-60"  onclick="setDateRange('60',this)">60 Days</div>
+      <div class="range-btn" id="range-30"  onclick="setDateRange('30',this)">30 Days</div>
     </div>
   </div>
 
-  <div class="trend-card">
-    <div class="trend-hdr">
-      <div><h3>Avg Monthly Rent — 1 BR &amp; 2 BR</h3><p>Average asking rent per property by bedroom type</p></div>
-      <div class="line-key">
-        <div class="line-key-item"><span class="lk-solid"></span>1 Bedroom</div>
-        <div class="line-key-item"><span class="lk-dashed"></span>2 Bedroom</div>
+  <div class="charts-2col-trends">
+    <div class="trend-card">
+      <div class="trend-hdr">
+        <div><h3>Avg Monthly Rent — 1 Bedroom</h3><p>Avg asking rent per property · 1BR units</p></div>
       </div>
+      <div class="trend-chart-wrap"><canvas id="trend1brDollar"></canvas></div>
     </div>
-    <div class="trend-chart-wrap"><canvas id="trendDollar"></canvas></div>
-    <div class="single-note" id="noteMain" style="display:none">Only 1 snapshot — lines connect as daily data accumulates.</div>
+    <div class="trend-card">
+      <div class="trend-hdr">
+        <div><h3>Avg Monthly Rent — 2 Bedroom</h3><p>Avg asking rent per property · 2BR units</p></div>
+      </div>
+      <div class="trend-chart-wrap"><canvas id="trend2brDollar"></canvas></div>
+    </div>
   </div>
 
-  <div class="trend-card">
-    <div class="trend-hdr">
-      <div><h3>Avg $/Sq Ft Over Time — 1 BR &amp; 2 BR</h3><p>Average price per square foot by bedroom type</p></div>
-      <div class="line-key">
-        <div class="line-key-item"><span class="lk-solid"></span>1 Bedroom</div>
-        <div class="line-key-item"><span class="lk-dashed"></span>2 Bedroom</div>
+  <div class="charts-2col-trends">
+    <div class="trend-card">
+      <div class="trend-hdr">
+        <div><h3>Avg $/Sq Ft — 1 Bedroom</h3><p>Price per square foot over time · 1BR units</p></div>
       </div>
+      <div class="trend-chart-wrap"><canvas id="trend1brPsf"></canvas></div>
     </div>
-    <div class="trend-chart-wrap"><canvas id="trendPsf"></canvas></div>
+    <div class="trend-card">
+      <div class="trend-hdr">
+        <div><h3>Avg $/Sq Ft — 2 Bedroom</h3><p>Price per square foot over time · 2BR units</p></div>
+      </div>
+      <div class="trend-chart-wrap"><canvas id="trend2brPsf"></canvas></div>
+    </div>
   </div>
+  <div class="single-note" id="noteMain" style="display:none">Only 1 snapshot — lines connect as daily data accumulates.</div>
 
 </div><!-- /container -->
 
@@ -556,10 +557,10 @@ function initConfig() {
 let latestUnits      = [];
 let latestConfidence = {};
 let history          = [];
-let hiddenProps = new Set();
-let hiddenBrs   = new Set();
-let dollarChart = null;
-let psfChart    = null;
+let hiddenProps      = new Set();
+let dateRange        = 'all';
+let chart1brDollar   = null, chart2brDollar = null;
+let chart1brPsf      = null, chart2brPsf    = null;
 
 // ── UTILS ─────────────────────────────────────────────────────────────────────
 function milesApart(lat1,lng1,lat2,lng2) {
@@ -579,8 +580,18 @@ function avgPsfOf(arr) {
   return vals.length ? +(vals.reduce((s,v)=>s+v,0)/vals.length).toFixed(2) : null;
 }
 
-function dateLabels() {
-  return history.map(s => new Date(s.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}));
+function getFilteredHistory() {
+  if (dateRange === 'all' || history.length <= 1) return history;
+  const days   = parseInt(dateRange);
+  const cutoff = new Date(Date.now() - days * 86_400_000);
+  const filtered = history.filter(s => new Date(s.date+'T12:00:00') >= cutoff);
+  return filtered.length ? filtered : history;
+}
+
+function dateLabels(hist) {
+  return (hist || getFilteredHistory()).map(s =>
+    new Date(s.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})
+  );
 }
 
 // ── LOAD ──────────────────────────────────────────────────────────────────────
@@ -609,7 +620,6 @@ async function loadData() {
   buildDotPlot();
   buildPsfScatter();
   buildPsfDotPlot();
-  buildMap();
   renderTable('all');
   buildPropToggles();
   buildTrendCharts();
@@ -818,49 +828,6 @@ function buildPsfDotPlot() {
   });
 }
 
-// ── MAP ────────────────────────────────────────────────────────────────────────
-function buildMap() {
-  const subj = META[subjectId];
-  const map  = L.map('map', { zoomControl:true }).setView([subj.lat, subj.lng], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:'© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom:19
-  }).addTo(map);
-
-  const allMarkers = [];
-  PROP_KEYS.forEach(key => {
-    const p = PROPS[key];
-    const m = META[key];
-    const priced = latestUnits.filter(u=>u.prop===key&&u.rent);
-    const rents  = priced.map(u=>u.rent);
-    const rentRange = rents.length ? `$${Math.min(...rents).toLocaleString()}–$${Math.max(...rents).toLocaleString()}/mo` : 'Call for pricing';
-
-    const iconHtml = p.subject
-      ? `<div style="background:${p.color};color:white;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,.35);font-weight:900">★</div>`
-      : `<div style="background:${p.color};width:22px;height:22px;border-radius:50%;border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>`;
-
-    const icon = L.divIcon({ html:iconHtml, className:'', iconSize:p.subject?[34,34]:[22,22], iconAnchor:p.subject?[17,17]:[11,11] });
-
-    const dist = key===subjectId ? 'Subject property' : `${milesApart(subj.lat,subj.lng,m.lat,m.lng)} miles from ${PROPS[subjectId].short}`;
-
-    const marker = L.marker([m.lat,m.lng], {icon}).addTo(map);
-    marker.bindPopup(`
-      <div class="map-popup">
-        <h4>${p.subject?'★ ':''}${p.name}</h4>
-        <p>${m.units} units · Built ${m.yearBuilt}</p>
-        <p>${dist}</p>
-        <div class="rent-range">${rentRange}</div>
-      </div>
-    `, {maxWidth:240});
-
-    allMarkers.push(marker);
-  });
-
-  // Fit map to all markers
-  const group = L.featureGroup(allMarkers);
-  map.fitBounds(group.getBounds().pad(0.2));
-}
-
 // ── FLOORPLAN TABLE ───────────────────────────────────────────────────────────
 function availBadge(a) {
   if (!a) return `<span class="avail-call">—</span>`;
@@ -923,22 +890,25 @@ function toggleProp(key) {
   applyTrendVisibility();
 }
 
-function toggleBr(br, btn) {
-  if (hiddenBrs.has(br)) {
-    hiddenBrs.delete(br); btn.classList.replace('inactive','active');
-    btn.style.background='#334155'; btn.style.color='white';
-  } else {
-    hiddenBrs.add(br); btn.classList.replace('active','inactive');
-    btn.style.background='white'; btn.style.color='#334155';
-  }
+function setDateRange(range, btn) {
+  dateRange = range;
+  document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rebuildTrendCharts();
+}
+
+function rebuildTrendCharts() {
+  [chart1brDollar, chart2brDollar, chart1brPsf, chart2brPsf].forEach(c => c && c.destroy());
+  chart1brDollar = chart2brDollar = chart1brPsf = chart2brPsf = null;
+  buildTrendCharts();
   applyTrendVisibility();
 }
 
 function applyTrendVisibility() {
-  [dollarChart, psfChart].forEach(chart => {
+  [chart1brDollar, chart2brDollar, chart1brPsf, chart2brPsf].forEach(chart => {
     if (!chart) return;
-    chart.data.datasets.forEach((ds,i) => {
-      chart.setDatasetVisibility(i, !hiddenProps.has(ds.propKey) && !hiddenBrs.has(ds.brType));
+    chart.data.datasets.forEach((ds, i) => {
+      chart.setDatasetVisibility(i, !hiddenProps.has(ds.propKey));
     });
     chart.update('none');
   });
@@ -950,99 +920,91 @@ function snapUnits(snap) {
   return (snap.units || []).filter(u => PROP_KEYS.includes(u.prop));
 }
 
-function avgRentByBr(propKey, br) {
-  return history.map(snap => {
-    const us = snapUnits(snap).filter(u=>u.prop===propKey&&u.br===br&&u.rent);
-    return us.length ? Math.round(us.reduce((s,u)=>s+u.rent,0)/us.length) : null;
-  });
-}
-
-function avgPsfByBr(propKey, br) {
-  return history.map(snap => {
-    const us = snapUnits(snap).filter(u=>u.prop===propKey&&u.br===br&&u.rent&&u.sqft);
-    return us.length ? +(us.reduce((s,u)=>s+u.rent/u.sqft,0)/us.length).toFixed(3) : null;
-  });
-}
-
-function makeTrendDatasets(dataFn) {
-  const ptR = history.length<=3 ? 6 : 3;
-  const datasets = [];
-  for (const key of PROP_KEYS) {
-    const p = PROPS[key];
-    for (const br of [1,2]) {
-      const data = dataFn(key, br);
-      if (!data.some(v=>v!==null)) continue;
-      datasets.push({
-        label:               `${p.subject?'★ ':''}${p.short} ${br}BR`,
-        propKey:             key,
-        brType:              br,
-        data,
-        borderColor:         p.color,
-        backgroundColor:     p.color+'12',
-        borderWidth:         p.subject?2.5:2,
-        borderDash:          br===2?[7,4]:[],
-        pointRadius:         ptR,
-        pointHoverRadius:    9,
-        pointBackgroundColor:p.color,
-        pointBorderColor:    '#fff',
-        pointBorderWidth:    1.5,
-        tension:             0.35,
-        spanGaps:            true,
-        fill:                false,
-      });
-    }
-  }
-  return datasets;
+function makeSingleBrDatasets(br, computeFn) {
+  const fh  = getFilteredHistory();
+  const ptR = fh.length <= 3 ? 6 : fh.length <= 10 ? 4 : 3;
+  return PROP_KEYS.map(key => {
+    const p    = PROPS[key];
+    const data = fh.map(snap => computeFn(snap, key, br));
+    if (!data.some(v => v !== null)) return null;
+    return {
+      label:                `${p.subject?'★ ':''}${p.short}`,
+      propKey:              key,
+      data,
+      borderColor:          p.color,
+      backgroundColor:      p.color + '14',
+      borderWidth:          p.subject ? 2.5 : 2,
+      pointRadius:          ptR,
+      pointHoverRadius:     8,
+      pointBackgroundColor: p.color,
+      pointBorderColor:     '#fff',
+      pointBorderWidth:     1.5,
+      tension:              0.35,
+      spanGaps:             true,
+      fill:                 false,
+    };
+  }).filter(Boolean);
 }
 
 const TREND_OPTS = (yLabel, yFmt) => ({
-  responsive:true, maintainAspectRatio:false,
-  interaction:{ mode:'index', intersect:false },
-  plugins:{
-    legend:{
-      position:'bottom',
-      labels:{ font:{size:11}, padding:16, color:'#334155', boxWidth:28, boxHeight:3,
-        generateLabels: ch => ch.data.datasets.map((ds,i)=>({
-          text:ds.label, strokeStyle:ds.borderColor, fillStyle:'transparent',
-          lineWidth:2.5, lineDash:ds.borderDash, hidden:!ch.isDatasetVisible(i), datasetIndex:i
+  responsive: true, maintainAspectRatio: false,
+  interaction: { mode:'index', intersect:false },
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: { font:{size:11}, padding:14, color:'#334155', boxWidth:24, boxHeight:3,
+        generateLabels: ch => ch.data.datasets.map((ds,i) => ({
+          text: ds.label, strokeStyle: ds.borderColor, fillStyle:'transparent',
+          lineWidth: 2.5, hidden: !ch.isDatasetVisible(i), datasetIndex: i
         }))
       },
-      onClick: (e,item,legend) => {
+      onClick: (e, item, legend) => {
         const ds = legend.chart.data.datasets[item.datasetIndex];
         toggleProp(ds.propKey);
       }
     },
-    tooltip:{
+    tooltip: {
       backgroundColor:'#0f172a', titleFont:{size:12,weight:'700'}, bodyFont:{size:11}, padding:12,
-      callbacks:{
+      callbacks: {
         title: ctx => ctx[0].label,
-        label: ctx => ctx.raw!==null ? ` ${ctx.dataset.label}: ${yFmt(ctx.raw)}` : null
+        label: ctx => ctx.raw !== null ? ` ${ctx.dataset.label}: ${yFmt(ctx.raw)}` : null
       }
     }
   },
-  scales:{
-    x:{ grid:{color:'#f1f5f9'}, ticks:{font:{size:11},color:'#64748b',maxTicksLimit:12} },
-    y:{ title:{display:true,text:yLabel,font:{size:11,weight:'600'},color:'#64748b'}, grid:{color:'#f1f5f9'}, ticks:{font:{size:11},color:'#94a3b8',callback:v=>yFmt(v)} }
+  scales: {
+    x: { grid:{color:'#f1f5f9'}, ticks:{font:{size:10},color:'#64748b',maxTicksLimit:10} },
+    y: {
+      title: { display:true, text:yLabel, font:{size:11,weight:'600'}, color:'#64748b' },
+      grid:  { color:'#f1f5f9' },
+      ticks: { font:{size:10}, color:'#94a3b8', callback: v => yFmt(v) }
+    }
   }
 });
 
+function makeChart(canvasId, br, computeFn, yLabel, yFmt) {
+  return new Chart(document.getElementById(canvasId), {
+    type: 'line',
+    data: { labels: dateLabels(), datasets: makeSingleBrDatasets(br, computeFn) },
+    options: TREND_OPTS(yLabel, yFmt),
+  });
+}
+
 function buildTrendCharts() {
-  const labels   = dateLabels();
-  const isSingle = history.length===1;
+  const rentFn = (snap, key, br) => {
+    const us = snapUnits(snap).filter(u => u.prop===key && u.br===br && u.rent);
+    return us.length ? Math.round(us.reduce((s,u)=>s+u.rent,0)/us.length) : null;
+  };
+  const psfFn = (snap, key, br) => {
+    const us = snapUnits(snap).filter(u => u.prop===key && u.br===br && u.rent && u.sqft);
+    return us.length ? +(us.reduce((s,u)=>s+u.rent/u.sqft,0)/us.length).toFixed(3) : null;
+  };
 
-  dollarChart = new Chart(document.getElementById('trendDollar'), {
-    type:'line',
-    data:{ labels, datasets: makeTrendDatasets(avgRentByBr) },
-    options: TREND_OPTS('Avg Monthly Rent ($)', v=>'$'+v.toLocaleString())
-  });
+  chart1brDollar = makeChart('trend1brDollar', 1, rentFn, 'Avg Rent ($)',  v => '$'+v.toLocaleString());
+  chart2brDollar = makeChart('trend2brDollar', 2, rentFn, 'Avg Rent ($)',  v => '$'+v.toLocaleString());
+  chart1brPsf    = makeChart('trend1brPsf',    1, psfFn,  'Avg $/Sq Ft',  v => '$'+v.toFixed(2));
+  chart2brPsf    = makeChart('trend2brPsf',    2, psfFn,  'Avg $/Sq Ft',  v => '$'+v.toFixed(2));
 
-  psfChart = new Chart(document.getElementById('trendPsf'), {
-    type:'line',
-    data:{ labels, datasets: makeTrendDatasets(avgPsfByBr) },
-    options: TREND_OPTS('Avg $/Sq Ft', v=>'$'+v.toFixed(2))
-  });
-
-  if (isSingle) document.getElementById('noteMain').style.display='';
+  if (getFilteredHistory().length === 1) document.getElementById('noteMain').style.display='';
 }
 
 // ── DELETE PROPERTY MODAL ─────────────────────────────────────────────────────
