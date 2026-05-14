@@ -593,7 +593,8 @@ async function loadData() {
   } catch { history = SEED_DATA; }
 
   const latest     = history[history.length-1];
-  latestUnits      = latest.units;
+  // Filter to only units belonging to this dashboard's properties
+  latestUnits      = (latest.units || []).filter(u => PROP_KEYS.includes(u.prop));
   latestConfidence = latest.confidence || {};
 
   const d = new Date(latest.date+'T12:00:00');
@@ -944,16 +945,21 @@ function applyTrendVisibility() {
 }
 
 // ── TREND CHARTS ──────────────────────────────────────────────────────────────
+function snapUnits(snap) {
+  // Only units that belong to this dashboard's property set
+  return (snap.units || []).filter(u => PROP_KEYS.includes(u.prop));
+}
+
 function avgRentByBr(propKey, br) {
   return history.map(snap => {
-    const us = snap.units.filter(u=>u.prop===propKey&&u.br===br&&u.rent);
+    const us = snapUnits(snap).filter(u=>u.prop===propKey&&u.br===br&&u.rent);
     return us.length ? Math.round(us.reduce((s,u)=>s+u.rent,0)/us.length) : null;
   });
 }
 
 function avgPsfByBr(propKey, br) {
   return history.map(snap => {
-    const us = snap.units.filter(u=>u.prop===propKey&&u.br===br&&u.rent&&u.sqft);
+    const us = snapUnits(snap).filter(u=>u.prop===propKey&&u.br===br&&u.rent&&u.sqft);
     return us.length ? +(us.reduce((s,u)=>s+u.rent/u.sqft,0)/us.length).toFixed(3) : null;
   });
 }
