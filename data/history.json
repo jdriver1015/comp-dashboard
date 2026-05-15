@@ -4925,7 +4925,7 @@
         "sqft": 729,
         "rent": 1239,
         "avail": "Available Now",
-        "count": 4
+        "count": 3
       },
       {
         "prop": "stablechase",
@@ -4995,7 +4995,7 @@
         "sqft": 656,
         "rent": 1267,
         "avail": "Available Now",
-        "count": 1
+        "count": 10
       },
       {
         "prop": "cypress_creek",
@@ -5005,7 +5005,7 @@
         "sqft": 749,
         "rent": 1268,
         "avail": "Available Now",
-        "count": 3
+        "count": 17
       },
       {
         "prop": "cypress_creek",
@@ -5076,16 +5076,6 @@
         "rent": null,
         "avail": "Call for pricing",
         "count": 0
-      },
-      {
-        "prop": "westpark_ranch",
-        "plan": "C1",
-        "br": 1,
-        "ba": 1.0,
-        "sqft": 800,
-        "rent": 1100,
-        "avail": "Available Now",
-        "count": 1
       },
       {
         "prop": "belrose",
