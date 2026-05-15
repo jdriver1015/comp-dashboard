@@ -4635,7 +4635,7 @@
         "sqft": 665,
         "rent": 1189,
         "avail": "Available Now",
-        "count": 1
+        "count": 2
       },
       {
         "prop": "marquis",
@@ -4645,7 +4645,7 @@
         "sqft": 706,
         "rent": 1104,
         "avail": "Available Now",
-        "count": 2
+        "count": 1
       },
       {
         "prop": "marquis",
@@ -4654,7 +4654,7 @@
         "ba": 1,
         "sqft": 810,
         "rent": 1059,
-        "avail": "Friday June 5 2026",
+        "avail": "Available Now",
         "count": 3
       },
       {
@@ -4684,7 +4684,7 @@
         "ba": 1,
         "sqft": 918,
         "rent": 1504,
-        "avail": "Friday June 12 2026",
+        "avail": "Available Now",
         "count": 1
       },
       {
@@ -4694,7 +4694,7 @@
         "ba": 2,
         "sqft": 958,
         "rent": 1193,
-        "avail": "Wednesday July 15 2026",
+        "avail": "Available Now",
         "count": 1
       },
       {
@@ -4749,16 +4749,6 @@
       },
       {
         "prop": "greenwood",
-        "plan": "C",
-        "br": 1,
-        "ba": 1,
-        "sqft": 770,
-        "rent": 1129,
-        "avail": "Available Now",
-        "count": 2
-      },
-      {
-        "prop": "greenwood",
         "plan": "D",
         "br": 2,
         "ba": 1,
@@ -4766,6 +4756,16 @@
         "rent": 1110,
         "avail": "Available Now",
         "count": 4
+      },
+      {
+        "prop": "greenwood",
+        "plan": "C",
+        "br": 1,
+        "ba": 1,
+        "sqft": 770,
+        "rent": 1129,
+        "avail": "Available Now",
+        "count": 2
       },
       {
         "prop": "greenwood",
@@ -4804,8 +4804,8 @@
         "ba": 2,
         "sqft": 1458,
         "rent": 1896,
-        "avail": "Last Available",
-        "count": 1
+        "avail": "Available Now",
+        "count": 2
       },
       {
         "prop": "northchase",
@@ -4988,6 +4988,56 @@
         "count": 1
       },
       {
+        "prop": "cypress_creek",
+        "plan": "A1",
+        "br": 1,
+        "ba": 1,
+        "sqft": 656,
+        "rent": 1267,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "A2",
+        "br": 1,
+        "ba": 1,
+        "sqft": 749,
+        "rent": 1268,
+        "avail": "Available Now",
+        "count": 3
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B2",
+        "br": 2,
+        "ba": 2,
+        "sqft": 974,
+        "rent": 1634,
+        "avail": "Available Now",
+        "count": 2
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B5",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1148,
+        "rent": 1686,
+        "avail": "Available Now",
+        "count": 2
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B1",
+        "br": 2,
+        "ba": 1,
+        "sqft": 930,
+        "rent": 1322,
+        "avail": "Available Jul 07",
+        "count": 1
+      },
+      {
         "prop": "westpark_ranch",
         "plan": "A1",
         "br": 1,
@@ -5012,7 +5062,7 @@
         "plan": "B1",
         "br": 1,
         "ba": 1.0,
-        "sqft": 800,
+        "sqft": 900,
         "rent": null,
         "avail": "Call for pricing",
         "count": 0
@@ -5032,9 +5082,9 @@
         "plan": "C1",
         "br": 1,
         "ba": 1.0,
-        "sqft": 900,
-        "rent": null,
-        "avail": "Last Available",
+        "sqft": 800,
+        "rent": 1100,
+        "avail": "Available Now",
         "count": 1
       },
       {
@@ -5095,7 +5145,7 @@
         "sqft": 1254,
         "rent": 1445,
         "avail": "Available Now",
-        "count": 7
+        "count": 6
       },
       {
         "prop": "belrose",
@@ -5118,6 +5168,136 @@
         "count": 4
       },
       {
+        "prop": "arlo_westchase",
+        "plan": "A1",
+        "br": 1,
+        "ba": 1,
+        "sqft": 632,
+        "rent": 1460,
+        "avail": "Only 2 left!",
+        "count": 3
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A1.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 632,
+        "rent": 1267,
+        "avail": "DO YOU QUALIFY?",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A2",
+        "br": 1,
+        "ba": 1,
+        "sqft": 769,
+        "rent": 1420,
+        "avail": "Only 3 left!",
+        "count": 4
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A2.P6",
+        "br": 1,
+        "ba": 1,
+        "sqft": 769,
+        "rent": 1308,
+        "avail": "DO YOU QUALIFY?",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A2.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 769,
+        "rent": 1269,
+        "avail": "DO YOU QUALIFY?",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A3",
+        "br": 1,
+        "ba": 1,
+        "sqft": 770,
+        "rent": 1394,
+        "avail": "Only 3 left!",
+        "count": 4
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A3.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 770,
+        "rent": 1283,
+        "avail": "DO YOU QUALIFY?",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A4",
+        "br": 1,
+        "ba": 1,
+        "sqft": 823,
+        "rent": 1580,
+        "avail": "Only 1 left!",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A5",
+        "br": 1,
+        "ba": 1,
+        "sqft": 859,
+        "rent": 1460,
+        "avail": "Only 2 left!",
+        "count": 3
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A6",
+        "br": 1,
+        "ba": 1,
+        "sqft": 872,
+        "rent": 1485,
+        "avail": "Only 2 left!",
+        "count": 3
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A6.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 872,
+        "rent": 1510,
+        "avail": "DO YOU QUALIFY?",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A7",
+        "br": 1,
+        "ba": 1,
+        "sqft": 917,
+        "rent": 1615,
+        "avail": "Only 1 left!",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "B2",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1075,
+        "rent": 1970,
+        "avail": "Only 1 left!",
+        "count": 1
+      },
+      {
         "prop": "portico_west8",
         "plan": "Barcelona",
         "br": 1,
@@ -5134,16 +5314,6 @@
         "ba": 1,
         "sqft": 870,
         "rent": 1275,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "portico_west8",
-        "plan": "Marabella",
-        "br": 2,
-        "ba": 2,
-        "sqft": 2408,
-        "rent": 3174,
         "avail": "Available Now",
         "count": 1
       },
@@ -5179,21 +5349,31 @@
       },
       {
         "prop": "portico_west8",
-        "plan": "Sevilla",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1383,
-        "rent": 2195,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "portico_west8",
         "plan": "Cordova",
         "br": 2,
         "ba": 2,
         "sqft": 1105,
         "rent": 1525,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "portico_west8",
+        "plan": "Marabella",
+        "br": 2,
+        "ba": 2,
+        "sqft": 2408,
+        "rent": 3174,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "portico_west8",
+        "plan": "Sevilla",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1383,
+        "rent": 2195,
         "avail": "Available Now",
         "count": 1
       },
@@ -5324,10 +5504,10 @@
       "greenwood": 70,
       "northchase": 25,
       "stablechase": 90,
-      "cypress_creek": 15,
+      "cypress_creek": 90,
       "westpark_ranch": 70,
       "belrose": 90,
-      "arlo_westchase": 15,
+      "arlo_westchase": 35,
       "portico_west8": 90,
       "captains_landing": 55,
       "village_by_the_sea": 15,
