@@ -31,7 +31,7 @@
     "color": "#7c3aed",
     "comps": [
       { "id": "belrose",        "name": "Belrose",           "shortName": "Belrose",    "address": "11212 Westpark Dr, Houston, TX 77042",         "yearBuilt": 2003, "totalUnits": 282, "website": "https://www.belroseliving.com/floor-plans",                                     "lat": 29.7350, "lng": -95.5725, "color": "#f59e0b", "availUnknown": false },
-      { "id": "arlo_westchase", "name": "Arlo Westchase",    "shortName": "Arlo",       "address": "3505 W Sam Houston Pkwy S, Houston, TX 77042", "yearBuilt": 2015, "totalUnits": 265, "website": "https://arlowestchase.com/floorplans/",                                         "lat": 29.7290, "lng": -95.5680, "color": "#10b981", "availUnknown": false },
+      { "id": "arlo_westchase", "name": "Arlo Westchase",    "shortName": "Arlo",       "address": "3505 W Sam Houston Pkwy S, Houston, TX 77042", "yearBuilt": 2015, "totalUnits": 265, "website": "https://www.apartments.com/arlo-westchase-houston-tx/j3sptr7/", "fallback_url": "https://arlowestchase.com/floorplans/", "lat": 29.7290, "lng": -95.5680, "color": "#10b981", "availUnknown": false },
       { "id": "portico_west8",  "name": "Portico at West 8", "shortName": "Portico W8", "address": "3003 Seagler Rd, Houston, TX 77042",           "yearBuilt": 2008, "totalUnits": 526, "website": "https://www.porticoatwest8.com/apartments/tx/houston/floor-plans#/",          "lat": 29.7445, "lng": -95.5760, "color": "#f43f5e", "availUnknown": false }
     ]
   },

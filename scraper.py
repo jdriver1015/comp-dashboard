@@ -49,6 +49,7 @@ def load_sites():
                     "prop":         entry["id"],
                     "name":         entry["name"],
                     "url":          entry["website"],
+                    "fallback_url": entry.get("fallback_url"),
                     "availUnknown": entry.get("availUnknown", False),
                 })
                 seen.add(entry["id"])
@@ -56,10 +57,11 @@ def load_sites():
 
 
 # ── PLAYWRIGHT PAGE FETCH ──────────────────────────────────────────────────────
-def fetch_page_text(url: str, pw) -> str:
+def fetch_page_text(url: str, pw, extra_wait: int = 0) -> str:
     """
     Render the page with a headless Chromium browser and return
-    the visible text content (trimmed to 14k chars for Gemini).
+    the visible text content (trimmed to 14k chars for the LLM).
+    extra_wait: additional ms to wait after the base 6s, for slow SPAs.
     """
     browser = pw.chromium.launch(headless=True)
     ctx = browser.new_context(
@@ -74,7 +76,7 @@ def fetch_page_text(url: str, pw) -> str:
     try:
         # Use "domcontentloaded" first, then wait — avoids timeout on slow SPAs
         page.goto(url, wait_until="domcontentloaded", timeout=45_000)
-        page.wait_for_timeout(6_000)   # extra time for lazy-loaded JS
+        page.wait_for_timeout(6_000 + extra_wait)   # extra time for lazy-loaded JS
 
         # Try clicking a "View All" or "See All" button if present
         for selector in [
@@ -254,20 +256,32 @@ def scrape_all():
                     print(f"    -> No page content — skipping LLM call", file=sys.stderr)
                 else:
                     raw_units = extract_with_groq(page_text, site["name"], client)
-                    for u in raw_units:
-                        all_units.append({
-                            "prop":  site["prop"],
-                            "plan":  str(u.get("plan", "")).strip() or "N/A",
-                            "br":    int(u.get("br") or 0),
-                            "ba":    u.get("ba") or 1,
-                            "sqft":  int(u.get("sqft") or 0),
-                            "rent":  int(u["rent"]) if u.get("rent") else None,
-                            "avail": str(u.get("avail", "")).strip() or "Unknown",
-                            "count": int(u["count"]) if u.get("count") is not None else 1,
-                        })
-                    print(f"    -> {len(raw_units)} unit(s) extracted")
+                    print(f"    -> {len(raw_units)} unit(s) extracted from primary URL")
 
-                # Respect Gemini free-tier rate limit (15 req/min)
+                # If primary returned nothing and a fallback URL exists, try it
+                # with an extended wait to handle slow JS-rendered pricing engines
+                if not raw_units and site.get("fallback_url"):
+                    print(f"    -> Primary yielded 0 units — trying fallback URL with extended wait...")
+                    time.sleep(3)
+                    fallback_text = fetch_page_text(site["fallback_url"], pw, extra_wait=10_000)
+                    if fallback_text:
+                        raw_units = extract_with_groq(fallback_text, site["name"], client)
+                        print(f"    -> {len(raw_units)} unit(s) extracted from fallback URL")
+                    else:
+                        print(f"    -> Fallback also returned no content", file=sys.stderr)
+
+                for u in raw_units:
+                    all_units.append({
+                        "prop":  site["prop"],
+                        "plan":  str(u.get("plan", "")).strip() or "N/A",
+                        "br":    int(u.get("br") or 0),
+                        "ba":    u.get("ba") or 1,
+                        "sqft":  int(u.get("sqft") or 0),
+                        "rent":  int(u["rent"]) if u.get("rent") else None,
+                        "avail": str(u.get("avail", "")).strip() or "Unknown",
+                        "count": int(u["count"]) if u.get("count") is not None else 1,
+                    })
+
                 time.sleep(5)
 
             except Exception as e:
