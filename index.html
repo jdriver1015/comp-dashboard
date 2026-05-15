@@ -434,6 +434,14 @@ const PORTFOLIO = {
       { id:'cypress_creek', name:'Villages of Cypress Creek',  shortName:'Cypress Creek', yearBuilt:2001, totalUnits:384, lat:29.991000, lng:-95.521000, color:'#06b6d4', availUnknown:false },
     ]
   },
+  westpark_ranch: {
+    subject: { id:'westpark_ranch', name:'Westpark Ranch', shortName:'Westpark Ranch', yearBuilt:2003, totalUnits:156, lat:29.7350, lng:-95.5640, color:'#7c3aed' },
+    comps: [
+      { id:'belrose',        name:'Belrose',           shortName:'Belrose',    yearBuilt:2003, totalUnits:282, lat:29.7350, lng:-95.5725, color:'#f59e0b', availUnknown:false },
+      { id:'arlo_westchase', name:'Arlo Westchase',    shortName:'Arlo',       yearBuilt:2015, totalUnits:265, lat:29.7290, lng:-95.5680, color:'#10b981', availUnknown:false },
+      { id:'portico_west8',  name:'Portico at West 8', shortName:'Portico W8', yearBuilt:2008, totalUnits:526, lat:29.7445, lng:-95.5760, color:'#f43f5e', availUnknown:false },
+    ]
+  },
   captains_landing: {
     subject: { id:'captains_landing', name:"Captain's Landing", shortName:"Captain's Landing", yearBuilt:1983, totalUnits:390, lat:29.2858, lng:-94.8260, color:'#0ea5e9' },
     comps: [
@@ -559,7 +567,9 @@ async function loadData() {
   latestConfidence = latest.confidence || {};
 
   const d = new Date(latest.date+'T12:00:00');
-  const marketLabel = subjectId === 'captains_landing' ? 'Galveston Island, TX' : 'Northwest Houston, TX';
+  const marketLabel = subjectId === 'captains_landing' ? 'Galveston Island, TX'
+                   : subjectId === 'westpark_ranch'    ? 'Westchase, Houston, TX'
+                   : 'Northwest Houston, TX';
   document.getElementById('headerSubtitle').textContent =
     `${marketLabel} · ${d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})} · ${PROP_KEYS.length} Properties · ${latestUnits.length} Floorplans`;
   document.getElementById('snapshotCount').textContent = history.length;
