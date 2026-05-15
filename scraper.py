@@ -45,12 +45,16 @@ def load_sites():
     for p in props:
         for entry in [p] + p.get("comps", []):
             if entry.get("id") not in seen and entry.get("website"):
+                # Normalise fallback_urls: support both array and legacy single string
+                raw_fb = entry.get("fallback_urls") or entry.get("fallback_url")
+                if isinstance(raw_fb, str):
+                    raw_fb = [raw_fb]
                 sites.append({
-                    "prop":         entry["id"],
-                    "name":         entry["name"],
-                    "url":          entry["website"],
-                    "fallback_url": entry.get("fallback_url"),
-                    "availUnknown": entry.get("availUnknown", False),
+                    "prop":          entry["id"],
+                    "name":          entry["name"],
+                    "url":           entry["website"],
+                    "fallback_urls": raw_fb or [],
+                    "availUnknown":  entry.get("availUnknown", False),
                 })
                 seen.add(entry["id"])
     return sites
@@ -253,22 +257,26 @@ def scrape_all():
             try:
                 page_text = fetch_page_text(site["url"], pw)
                 if not page_text:
-                    print(f"    -> No page content — skipping LLM call", file=sys.stderr)
+                    print(f"    -> No page content from primary URL", file=sys.stderr)
                 else:
                     raw_units = extract_with_groq(page_text, site["name"], client)
                     print(f"    -> {len(raw_units)} unit(s) extracted from primary URL")
 
-                # If primary returned nothing and a fallback URL exists, try it
-                # with an extended wait to handle slow JS-rendered pricing engines
-                if not raw_units and site.get("fallback_url"):
-                    print(f"    -> Primary yielded 0 units — trying fallback URL with extended wait...")
+                # Walk the fallback chain until we get units.
+                # Each successive fallback gets +8s extra wait (slow JS pricing engines).
+                for fb_idx, fb_url in enumerate(site.get("fallback_urls", [])):
+                    if raw_units:
+                        break
+                    extra = (fb_idx + 1) * 8_000   # 8s, 16s, 24s …
+                    print(f"    -> 0 units so far — trying fallback {fb_idx+1} "
+                          f"({fb_url}) with +{extra//1000}s wait…")
                     time.sleep(3)
-                    fallback_text = fetch_page_text(site["fallback_url"], pw, extra_wait=10_000)
-                    if fallback_text:
-                        raw_units = extract_with_groq(fallback_text, site["name"], client)
-                        print(f"    -> {len(raw_units)} unit(s) extracted from fallback URL")
+                    fb_text = fetch_page_text(fb_url, pw, extra_wait=extra)
+                    if fb_text:
+                        raw_units = extract_with_groq(fb_text, site["name"], client)
+                        print(f"    -> {len(raw_units)} unit(s) extracted from fallback {fb_idx+1}")
                     else:
-                        print(f"    -> Fallback also returned no content", file=sys.stderr)
+                        print(f"    -> Fallback {fb_idx+1} returned no content", file=sys.stderr)
 
                 for u in raw_units:
                     all_units.append({

@@ -15,7 +15,7 @@
       { "id": "greenwood",     "name": "Greenwood Forest",           "shortName": "Greenwood",     "address": "12820 Greenwood Forest Dr, Houston, TX 77066",  "yearBuilt": 1994, "totalUnits": 316, "website": "https://www.livegreenwoodforest.com/models",            "lat": 29.982149, "lng": -95.506107, "color": "#10b981", "availUnknown": false },
       { "id": "northchase",    "name": "Northchase Village",         "shortName": "Northchase",    "address": "4522 Sylvanfield Dr, Houston, TX 77014",         "yearBuilt": 2007, "totalUnits": 232, "website": "https://www.northchasevillage.com/floorplans/",         "lat": 29.990100, "lng": -95.515000, "color": "#8b5cf6", "availUnknown": true  },
       { "id": "stablechase",   "name": "Club at Stablechase",        "shortName": "Stablechase",   "address": "13504 Schroeder Rd, Houston, TX 77070",          "yearBuilt": 1999, "totalUnits": 148, "website": "https://www.clubatstablechaseliving.com/floorplans/", "lat": 29.970200, "lng": -95.530500, "color": "#ef4444", "availUnknown": false },
-      { "id": "cypress_creek", "name": "Villages of Cypress Creek",  "shortName": "Cypress Creek", "address": "10300 Cypresswood Dr, Houston, TX 77070",        "yearBuilt": 2001, "totalUnits": 384, "website": "https://villagesofcypresscreek.com/floorplans/",        "lat": 29.991000, "lng": -95.521000, "color": "#06b6d4", "availUnknown": false }
+      { "id": "cypress_creek", "name": "Villages of Cypress Creek",  "shortName": "Cypress Creek", "address": "10300 Cypresswood Dr, Houston, TX 77070",        "yearBuilt": 2001, "totalUnits": 384, "website": "https://villagesofcypresscreek.com/floorplans/",        "fallback_urls": ["https://www.apartments.com/the-villages-of-cypress-creek-houston-tx/r14jel1/", "https://villagesofcypresscreek.prospectportal.com/"], "lat": 29.991000, "lng": -95.521000, "color": "#06b6d4", "availUnknown": false }
     ]
   },
   {
@@ -31,7 +31,7 @@
     "color": "#7c3aed",
     "comps": [
       { "id": "belrose",        "name": "Belrose",           "shortName": "Belrose",    "address": "11212 Westpark Dr, Houston, TX 77042",         "yearBuilt": 2003, "totalUnits": 282, "website": "https://www.belroseliving.com/floor-plans",                                     "lat": 29.7350, "lng": -95.5725, "color": "#f59e0b", "availUnknown": false },
-      { "id": "arlo_westchase", "name": "Arlo Westchase",    "shortName": "Arlo",       "address": "3505 W Sam Houston Pkwy S, Houston, TX 77042", "yearBuilt": 2015, "totalUnits": 265, "website": "https://www.apartments.com/arlo-westchase-houston-tx/j3sptr7/", "fallback_url": "https://arlowestchase.com/floorplans/", "lat": 29.7290, "lng": -95.5680, "color": "#10b981", "availUnknown": false },
+      { "id": "arlo_westchase", "name": "Arlo Westchase",    "shortName": "Arlo",       "address": "3505 W Sam Houston Pkwy S, Houston, TX 77042", "yearBuilt": 2015, "totalUnits": 265, "website": "https://www.apartments.com/arlo-westchase-houston-tx/j3sptr7/", "fallback_urls": ["https://arlowestchase.com/floorplans/"], "lat": 29.7290, "lng": -95.5680, "color": "#10b981", "availUnknown": false },
       { "id": "portico_west8",  "name": "Portico at West 8", "shortName": "Portico W8", "address": "3003 Seagler Rd, Houston, TX 77042",           "yearBuilt": 2008, "totalUnits": 526, "website": "https://www.porticoatwest8.com/apartments/tx/houston/floor-plans#/",          "lat": 29.7445, "lng": -95.5760, "color": "#f43f5e", "availUnknown": false }
     ]
   },
