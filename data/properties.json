@@ -47,7 +47,7 @@
     "lng": -94.8260,
     "color": "#0ea5e9",
     "comps": [
-      { "id": "village_by_the_sea", "name": "Village by the Sea",      "shortName": "Village by Sea", "address": "6424 Central City Blvd, Galveston, TX 77551", "yearBuilt": 1984, "totalUnits": 241, "website": "https://www.apartments.com/village-by-the-sea-galveston-tx/nzbs0xp/", "lat": 29.2815, "lng": -94.9160, "color": "#f59e0b", "availUnknown": false },
+      { "id": "village_by_the_sea", "name": "Village by the Sea",      "shortName": "Village by Sea", "address": "6424 Central City Blvd, Galveston, TX 77551", "yearBuilt": 1984, "totalUnits": 241, "website": "https://www.villagebythesea.com/galveston/village-by-the-sea/conventional/", "fallback_urls": ["https://www.apartments.com/village-by-the-sea-galveston-tx/nzbs0xp/"], "lat": 29.2815, "lng": -94.9160, "color": "#f59e0b", "availUnknown": false },
       { "id": "west_beach",         "name": "Residence at West Beach", "shortName": "West Beach",     "address": "3222 69th St, Galveston, TX 77551",          "yearBuilt": 1976, "totalUnits": 133, "website": "https://www.residencewestbeach.com/floorplans/",           "lat": 29.2840, "lng": -94.8265, "color": "#8b5cf6", "availUnknown": false }
     ]
   }

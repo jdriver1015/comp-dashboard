@@ -78,9 +78,17 @@ def fetch_page_text(url: str, pw, extra_wait: int = 0) -> str:
     )
     page = ctx.new_page()
     try:
-        # Use "domcontentloaded" first, then wait — avoids timeout on slow SPAs
+        # Load DOM first, then try networkidle so AJAX-loaded pricing data
+        # (e.g. Entrata, Greystar) has time to finish.  Cap at 20s so sites
+        # with continuous background polling don't hang the whole run.
         page.goto(url, wait_until="domcontentloaded", timeout=45_000)
-        page.wait_for_timeout(6_000 + extra_wait)   # extra time for lazy-loaded JS
+        try:
+            page.wait_for_load_state("networkidle", timeout=20_000)
+        except Exception:
+            # networkidle timed out — fall back to a fixed wait
+            page.wait_for_timeout(6_000)
+        if extra_wait > 0:
+            page.wait_for_timeout(extra_wait)
 
         # Try clicking a "View All" or "See All" button if present
         for selector in [
