@@ -8203,7 +8203,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 665,
-        "rent": 930,
+        "rent": 934,
         "avail": "Available Now",
         "count": 2
       },
@@ -8213,7 +8213,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 810,
-        "rent": 1055,
+        "rent": 1059,
         "avail": "Available Now",
         "count": 3
       },
@@ -8223,9 +8223,9 @@
         "br": 2,
         "ba": 1,
         "sqft": 880,
-        "rent": 1134,
+        "rent": 1047,
         "avail": "Available Now",
-        "count": 4
+        "count": 5
       },
       {
         "prop": "marquis",
@@ -8233,7 +8233,7 @@
         "br": 2,
         "ba": 1,
         "sqft": 918,
-        "rent": 1473,
+        "rent": 1476,
         "avail": "Available Now",
         "count": 1
       },
@@ -8243,7 +8243,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 958,
-        "rent": 1152,
+        "rent": 1148,
         "avail": "Available Now",
         "count": 1
       },
@@ -8253,7 +8253,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1054,
-        "rent": 1264,
+        "rent": 1260,
         "avail": "Available Now",
         "count": 9
       },
@@ -8263,7 +8263,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1102,
-        "rent": 1394,
+        "rent": 1390,
         "avail": "Available Now",
         "count": 2
       },
@@ -8273,7 +8273,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1233,
-        "rent": 1324,
+        "rent": 1320,
         "avail": "Available Now",
         "count": 2
       },
@@ -8293,19 +8293,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 684,
-        "rent": 1024,
+        "rent": 1029,
         "avail": "Last Available",
         "count": 1
-      },
-      {
-        "prop": "greenwood",
-        "plan": "D",
-        "br": 2,
-        "ba": 1,
-        "sqft": 979,
-        "rent": 1120,
-        "avail": "Available Now",
-        "count": 3
       },
       {
         "prop": "greenwood",
@@ -8313,9 +8303,19 @@
         "br": 1,
         "ba": 1,
         "sqft": 770,
-        "rent": 1129,
+        "rent": 1134,
         "avail": "Available Now",
         "count": 2
+      },
+      {
+        "prop": "greenwood",
+        "plan": "D",
+        "br": 2,
+        "ba": 1,
+        "sqft": 979,
+        "rent": 1125,
+        "avail": "Available Now",
+        "count": 4
       },
       {
         "prop": "greenwood",
@@ -8323,9 +8323,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1077,
-        "rent": 1214,
-        "avail": "Last Available",
-        "count": 1
+        "rent": 1219,
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "greenwood",
@@ -8333,7 +8333,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1176,
-        "rent": 1220,
+        "rent": 1225,
         "avail": "Last Available",
         "count": 1
       },
@@ -8343,7 +8343,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1367,
-        "rent": 1780,
+        "rent": 1770,
         "avail": "Last Available",
         "count": 1
       },
@@ -8353,7 +8353,7 @@
         "br": 3,
         "ba": 2,
         "sqft": 1458,
-        "rent": 1906,
+        "rent": 1901,
         "avail": "Available Now",
         "count": 2
       },
@@ -8385,7 +8385,7 @@
         "sqft": 944,
         "rent": 1149,
         "avail": "Available Now",
-        "count": 2
+        "count": 1
       },
       {
         "prop": "northchase",
@@ -8465,7 +8465,7 @@
         "sqft": 648,
         "rent": null,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "stablechase",
@@ -8485,7 +8485,7 @@
         "sqft": 819,
         "rent": 1149,
         "avail": "Available Now",
-        "count": 2
+        "count": 1
       },
       {
         "prop": "stablechase",
@@ -8493,7 +8493,7 @@
         "br": 2,
         "ba": 1,
         "sqft": 912,
-        "rent": 1299,
+        "rent": 1099,
         "avail": "Available Now",
         "count": 3
       },
@@ -8503,7 +8503,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1118,
-        "rent": 1489,
+        "rent": 1439,
         "avail": "Available Now",
         "count": 3
       },
@@ -8513,7 +8513,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 1149,
-        "rent": 1469,
+        "rent": 1459,
         "avail": "Available Now",
         "count": 3
       },
@@ -8535,6 +8535,66 @@
         "sqft": 1439,
         "rent": null,
         "avail": "Available Now",
+        "count": 0
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "A1",
+        "br": 1,
+        "ba": 1,
+        "sqft": 656,
+        "rent": 1273,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "A2",
+        "br": 1,
+        "ba": 1,
+        "sqft": 749,
+        "rent": 1274,
+        "avail": "Available Now",
+        "count": 4
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B2",
+        "br": 2,
+        "ba": 2,
+        "sqft": 974,
+        "rent": 1637,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B5",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1148,
+        "rent": 1744,
+        "avail": "Available Jun 16",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "B1",
+        "br": 2,
+        "ba": 1,
+        "sqft": 930,
+        "rent": 1322,
+        "avail": "Available Jul 07",
+        "count": 1
+      },
+      {
+        "prop": "cypress_creek",
+        "plan": "A2",
+        "br": 1,
+        "ba": 1,
+        "sqft": 749,
+        "rent": 1199,
+        "avail": "Available Jul 08",
         "count": 1
       },
       {
@@ -8552,7 +8612,7 @@
         "plan": "A2",
         "br": 2,
         "ba": 2.0,
-        "sqft": 1000,
+        "sqft": 1050,
         "rent": 1500,
         "avail": "Available Now",
         "count": 2
@@ -8578,14 +8638,24 @@
         "count": 0
       },
       {
+        "prop": "westpark_ranch",
+        "plan": "C1",
+        "br": 1,
+        "ba": 1.0,
+        "sqft": 800,
+        "rent": 1100,
+        "avail": "Available Now",
+        "count": 1
+      },
+      {
         "prop": "belrose",
         "plan": "A1",
         "br": 1,
         "ba": 1,
         "sqft": 707,
-        "rent": null,
-        "avail": "LIMITED AVAILABILITY",
-        "count": 0
+        "rent": 1035,
+        "avail": "Available Now",
+        "count": 1
       },
       {
         "prop": "belrose",
@@ -8594,7 +8664,7 @@
         "ba": 1,
         "sqft": 755,
         "rent": 1080,
-        "avail": "1 UNIT AVAILABLE",
+        "avail": "Tuesday June 23 2026",
         "count": 1
       },
       {
@@ -8604,7 +8674,7 @@
         "ba": 1,
         "sqft": 791,
         "rent": 1150,
-        "avail": "4 UNITS AVAILABLE",
+        "avail": "Available Now",
         "count": 4
       },
       {
@@ -8614,7 +8684,7 @@
         "ba": 1,
         "sqft": 881,
         "rent": 1275,
-        "avail": "2 UNITS AVAILABLE",
+        "avail": "Friday May 22 2026",
         "count": 2
       },
       {
@@ -8624,7 +8694,7 @@
         "ba": 2,
         "sqft": 1132,
         "rent": 1330,
-        "avail": "3 UNITS AVAILABLE",
+        "avail": "Friday May 22 2026",
         "count": 3
       },
       {
@@ -8634,7 +8704,7 @@
         "ba": 2,
         "sqft": 1254,
         "rent": 1445,
-        "avail": "6 UNITS AVAILABLE",
+        "avail": "Available Now",
         "count": 6
       },
       {
@@ -8644,7 +8714,7 @@
         "ba": 2,
         "sqft": 1440,
         "rent": 1830,
-        "avail": "1 UNIT AVAILABLE",
+        "avail": "Monday July 6 2026",
         "count": 1
       },
       {
@@ -8654,8 +8724,158 @@
         "ba": 2,
         "sqft": 1551,
         "rent": 1745,
-        "avail": "4 UNITS AVAILABLE",
+        "avail": "Available Now",
         "count": 4
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A1",
+        "br": 1,
+        "ba": 1,
+        "sqft": 632,
+        "rent": 1460,
+        "avail": "Only 2 left!",
+        "count": 2
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A1.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 632,
+        "rent": 1267,
+        "avail": "DO YOU QUALIFY?",
+        "count": 0
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A2",
+        "br": 1,
+        "ba": 1,
+        "sqft": 769,
+        "rent": 1420,
+        "avail": "Only 3 left!",
+        "count": 3
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A2.P6",
+        "br": 1,
+        "ba": 1,
+        "sqft": 769,
+        "rent": 1308,
+        "avail": "DO YOU QUALIFY?",
+        "count": 0
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A2.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 769,
+        "rent": 1269,
+        "avail": "DO YOU QUALIFY?",
+        "count": 0
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A3",
+        "br": 1,
+        "ba": 1,
+        "sqft": 770,
+        "rent": 1404,
+        "avail": "Only 3 left!",
+        "count": 3
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A3.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 770,
+        "rent": 1283,
+        "avail": "DO YOU QUALIFY?",
+        "count": 0
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A4",
+        "br": 1,
+        "ba": 1,
+        "sqft": 823,
+        "rent": 1580,
+        "avail": "Only 1 left!",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A5",
+        "br": 1,
+        "ba": 1,
+        "sqft": 859,
+        "rent": 1460,
+        "avail": "Only 3 left!",
+        "count": 3
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A6",
+        "br": 1,
+        "ba": 1,
+        "sqft": 872,
+        "rent": 1485,
+        "avail": "Only 2 left!",
+        "count": 2
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A6.P8",
+        "br": 1,
+        "ba": 1,
+        "sqft": 872,
+        "rent": 1510,
+        "avail": "DO YOU QUALIFY?",
+        "count": 0
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "A7",
+        "br": 1,
+        "ba": 1,
+        "sqft": 917,
+        "rent": 1615,
+        "avail": "Only 1 left!",
+        "count": 1
+      },
+      {
+        "prop": "arlo_westchase",
+        "plan": "B2",
+        "br": 2,
+        "ba": 2,
+        "sqft": 1075,
+        "rent": 1970,
+        "avail": "Only 1 left!",
+        "count": 1
+      },
+      {
+        "prop": "portico_west8",
+        "plan": "Lisbon",
+        "br": 0,
+        "ba": 1,
+        "sqft": 1033,
+        "rent": 1325,
+        "avail": "Available Now",
+        "count": 0
+      },
+      {
+        "prop": "portico_west8",
+        "plan": "Malaga",
+        "br": 0,
+        "ba": 1,
+        "sqft": 815,
+        "rent": 1285,
+        "avail": "Available Now",
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8665,7 +8885,17 @@
         "sqft": 856,
         "rent": 1295,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
+      },
+      {
+        "prop": "portico_west8",
+        "plan": "Valencia",
+        "br": 1,
+        "ba": 1,
+        "sqft": 845,
+        "rent": 1265,
+        "avail": "Available Now",
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8673,9 +8903,9 @@
         "br": 1,
         "ba": 1,
         "sqft": 870,
-        "rent": 1275,
+        "rent": 1345,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8683,9 +8913,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 2408,
-        "rent": 3174,
+        "rent": 3195,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8693,9 +8923,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1105,
-        "rent": 1575,
+        "rent": 1650,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8703,9 +8933,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1306,
-        "rent": 1725,
+        "rent": 1950,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8713,9 +8943,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1313,
-        "rent": 1725,
+        "rent": 1795,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8723,9 +8953,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1383,
-        "rent": 2195,
+        "rent": 2050,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "portico_west8",
@@ -8735,7 +8965,7 @@
         "sqft": 1105,
         "rent": 1525,
         "avail": "Available Now",
-        "count": 1
+        "count": 0
       },
       {
         "prop": "captains_landing",
@@ -8743,19 +8973,9 @@
         "br": 2,
         "ba": 1,
         "sqft": 840,
-        "rent": 1069,
+        "rent": 1100,
         "avail": "Available Now",
         "count": 5
-      },
-      {
-        "prop": "captains_landing",
-        "plan": "Jade",
-        "br": 1,
-        "ba": 1,
-        "sqft": 577,
-        "rent": 1066,
-        "avail": "Available Now",
-        "count": 3
       },
       {
         "prop": "captains_landing",
@@ -8763,9 +8983,19 @@
         "br": 1,
         "ba": 1,
         "sqft": 640,
-        "rent": 895,
+        "rent": 914,
         "avail": "Available Now",
-        "count": 2
+        "count": 4
+      },
+      {
+        "prop": "captains_landing",
+        "plan": "Jade",
+        "br": 1,
+        "ba": 1,
+        "sqft": 577,
+        "rent": 1052,
+        "avail": "Available Now",
+        "count": 3
       },
       {
         "prop": "captains_landing",
@@ -8773,7 +9003,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 661,
-        "rent": 1055,
+        "rent": 1076,
         "avail": "Available Now",
         "count": 2
       },
@@ -8798,62 +9028,12 @@
         "count": 0
       },
       {
-        "prop": "village_by_the_sea",
-        "plan": "A1",
-        "br": 1,
-        "ba": 1.0,
-        "sqft": 750,
-        "rent": 1200,
-        "avail": "Available Now",
-        "count": 3
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "A2",
-        "br": 2,
-        "ba": 2.0,
-        "sqft": 1000,
-        "rent": 1500,
-        "avail": "Available Now",
-        "count": 2
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "B1",
-        "br": 1,
-        "ba": 1.0,
-        "sqft": 800,
-        "rent": 1100,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "B2",
-        "br": 2,
-        "ba": 2.0,
-        "sqft": 1200,
-        "rent": 1800,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "village_by_the_sea",
-        "plan": "C1",
-        "br": 1,
-        "ba": 1.0,
-        "sqft": 900,
-        "rent": 1300,
-        "avail": "Available Now",
-        "count": 4
-      },
-      {
         "prop": "west_beach",
         "plan": "Seahorse",
         "br": 1,
         "ba": 1,
         "sqft": 533,
-        "rent": 1230,
+        "rent": 1129,
         "avail": "Available Now",
         "count": 3
       },
@@ -8863,7 +9043,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 683,
-        "rent": 1275,
+        "rent": 1229,
         "avail": "Available Now",
         "count": 3
       },
@@ -8873,7 +9053,7 @@
         "br": 1,
         "ba": 1,
         "sqft": 715,
-        "rent": 1299,
+        "rent": 1269,
         "avail": "Available Now",
         "count": 3
       },
@@ -8883,7 +9063,7 @@
         "br": 2,
         "ba": 1,
         "sqft": 914,
-        "rent": 1574,
+        "rent": 1400,
         "avail": "Available Now",
         "count": 1
       },
@@ -8893,7 +9073,7 @@
         "br": 2,
         "ba": 2,
         "sqft": 936,
-        "rent": 1735,
+        "rent": 1599,
         "avail": "Available Now",
         "count": 3
       },
@@ -8903,59 +9083,9 @@
         "br": 2,
         "ba": 2,
         "sqft": 1180,
-        "rent": 1825,
+        "rent": 1679,
         "avail": "Available Now",
         "count": 3
-      },
-      {
-        "prop": "cypress_creek",
-        "plan": "A1",
-        "br": 1,
-        "ba": 1,
-        "sqft": 656,
-        "rent": 1273,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "cypress_creek",
-        "plan": "A2",
-        "br": 1,
-        "ba": 1,
-        "sqft": 749,
-        "rent": 1199,
-        "avail": "Available Now",
-        "count": 4
-      },
-      {
-        "prop": "cypress_creek",
-        "plan": "B1",
-        "br": 2,
-        "ba": 1,
-        "sqft": 930,
-        "rent": 1322,
-        "avail": "Available Jul 07",
-        "count": 1
-      },
-      {
-        "prop": "cypress_creek",
-        "plan": "B2",
-        "br": 2,
-        "ba": 2,
-        "sqft": 974,
-        "rent": 1637,
-        "avail": "Available Now",
-        "count": 1
-      },
-      {
-        "prop": "cypress_creek",
-        "plan": "B5",
-        "br": 2,
-        "ba": 2,
-        "sqft": 1148,
-        "rent": 1744,
-        "avail": "Available Jun 16",
-        "count": 1
       }
     ],
     "confidence": {
@@ -8964,13 +9094,13 @@
       "greenwood": 70,
       "northchase": 25,
       "stablechase": 90,
-      "cypress_creek": 75,
+      "cypress_creek": 90,
       "westpark_ranch": 70,
-      "belrose": 35,
-      "arlo_westchase": 15,
+      "belrose": 90,
+      "arlo_westchase": 35,
       "portico_west8": 90,
       "captains_landing": 70,
-      "village_by_the_sea": 90,
+      "village_by_the_sea": 15,
       "west_beach": 90
     }
   }
