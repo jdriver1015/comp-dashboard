@@ -84,6 +84,9 @@ def fetch_page_text(url: str, pw, extra_wait: int = 0) -> str:
         page.goto(url, wait_until="domcontentloaded", timeout=45_000)
         try:
             page.wait_for_load_state("networkidle", timeout=20_000)
+            # Some widgets (e.g. Apartments247) render the plan list a few
+            # seconds after the network goes quiet.
+            page.wait_for_timeout(5_000)
         except Exception:
             # networkidle timed out — fall back to a fixed wait
             page.wait_for_timeout(6_000)
@@ -143,8 +146,8 @@ Page text:
 
 
 GROQ_MODELS = [
-    "llama-3.1-8b-instant",   # fastest, most generous free quota
-    "llama3-8b-8192",         # fallback
+    "openai/gpt-oss-20b",     # fast, large context
+    "openai/gpt-oss-120b",    # fallback (llama-3.x models were retired by Groq)
 ]
 
 
@@ -162,18 +165,21 @@ def extract_with_groq(page_text: str, property_name: str, client) -> list:
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.1,
-                    max_tokens=2048,
+                    max_tokens=8192,
+                    reasoning_effort="low",
                 )
                 raw = response.choices[0].message.content.strip()
                 # Strip accidental markdown code fences
                 raw = re.sub(r"^```(?:json)?\s*", "", raw)
                 raw = re.sub(r"\s*```$",          "", raw)
-                data = json.loads(raw)
-                if isinstance(data, list):
-                    return data
+                # Tolerate trailing text after the JSON (reasoning models can add some)
+                start = min((i for i in (raw.find("["), raw.find("{")) if i != -1), default=0)
+                data, _ = json.JSONDecoder().raw_decode(raw[start:])
                 if isinstance(data, dict) and "units" in data:
-                    return data["units"]
-                return []
+                    data = data["units"]
+                if isinstance(data, list) and data:
+                    return data
+                break  # empty/unusable result — try next model
 
             except Exception as e:
                 err = str(e)

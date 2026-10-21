@@ -3,7 +3,7 @@ REM Champions Comp Scraper — Windows Task Scheduler Setup
 REM Run this file once as Administrator to register the daily 8 AM task.
 
 SET PYTHON=C:\Users\JimmyDriver\AppData\Local\Python\pythoncore-3.14-64\python.exe
-SET SCRIPT=C:\Users\JimmyDriver\OneDrive - crcapitaltx\CR Capital\comp-dashboard\scraper.py
+SET SCRIPT=C:mp-dashboardscraper.py
 SET TASK_NAME=Champions Comp Daily Scrape
 
 echo Creating scheduled task: %TASK_NAME%
